@@ -1,0 +1,143 @@
+{
+  "run_a": "runs/probe/hausa-asr-dev100-cpu",
+  "run_b": "runs/dev/hausa-asr-dev100-lang-hausa",
+  "label_a": "hausa-asr-dev100-cpu",
+  "label_b": "hausa-asr-dev100-lang-hausa",
+  "mode": "standard",
+  "headline": "standard WER",
+  "n_tests": 6,
+  "rules_version": "1.0.0",
+  "n_common": 100,
+  "dropped_a": 0,
+  "dropped_b": 0,
+  "cluster_keys": {
+    "group": 100,
+    "speaker": 0,
+    "own_cluster": 0,
+    "unit": "group"
+  },
+  "wer": {
+    "rate_a": 0.30008347245409017,
+    "rate_b": 0.30175292153589317,
+    "delta": -0.0016694490818029983,
+    "low": -0.00444453430381453,
+    "high": 0.0004506585270012121,
+    "p_value": 0.2538,
+    "a_better_prob": 0.8731,
+    "n_units": 81,
+    "unit": "cluster",
+    "resamples": 10000,
+    "mde": 0.0036061630469569708,
+    "significant": false
+  },
+  "cer": {
+    "rate_a": 0.08666054765182805,
+    "rate_b": 0.08689001070827597,
+    "delta": -0.00022946305644791498,
+    "low": -0.0007522299587780157,
+    "high": 0.00022638177790180477,
+    "p_value": 0.4658,
+    "a_better_prob": 0.7671,
+    "n_units": 81,
+    "unit": "cluster",
+    "resamples": 10000,
+    "mde": 0.0006958071354877389,
+    "significant": false
+  },
+  "sentence_wer": "No reliable difference: hausa-asr-dev100-cpu vs hausa-asr-dev100-lang-hausa differ by 0.17 points, inside the noise (95% CI -0.44 to +0.05). With this test set, differences under about 0.36 points cannot be detected.",
+  "sentence_cer": "No reliable difference: hausa-asr-dev100-cpu vs hausa-asr-dev100-lang-hausa differ by 0.02 points, inside the noise (95% CI -0.08 to +0.02). With this test set, differences under about 0.07 points cannot be detected.",
+  "modes": {
+    "raw": {
+      "wer": {
+        "rate_a": 0.42802056555269924,
+        "rate_b": 0.4297343616109683,
+        "delta": -0.001713796058269046,
+        "low": -0.005295733649748953,
+        "high": 0.0012437939914694465,
+        "p_value": 0.3928,
+        "a_better_prob": 0.8036,
+        "n_units": 81,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.0046896466123568506,
+        "significant": false
+      },
+      "cer": {
+        "rate_a": 0.1353412123522684,
+        "rate_b": 0.13564620663362562,
+        "delta": -0.0003049942813572182,
+        "low": -0.001188738732131536,
+        "high": 0.0004079343242293922,
+        "p_value": 0.5636,
+        "a_better_prob": 0.7182,
+        "n_units": 81,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.0011571636567411202,
+        "significant": false
+      }
+    },
+    "standard": {
+      "wer": {
+        "rate_a": 0.30008347245409017,
+        "rate_b": 0.30175292153589317,
+        "delta": -0.0016694490818029983,
+        "low": -0.00444453430381453,
+        "high": 0.0004506585270012121,
+        "p_value": 0.2538,
+        "a_better_prob": 0.8731,
+        "n_units": 81,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.0036061630469569708,
+        "significant": false
+      },
+      "cer": {
+        "rate_a": 0.08666054765182805,
+        "rate_b": 0.08689001070827597,
+        "delta": -0.00022946305644791498,
+        "low": -0.0007522299587780157,
+        "high": 0.00022638177790180477,
+        "p_value": 0.4658,
+        "a_better_prob": 0.7671,
+        "n_units": 81,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.0006958071354877389,
+        "significant": false
+      }
+    },
+    "lenient": {
+      "wer": {
+        "rate_a": 0.2654424040066778,
+        "rate_b": 0.26669449081803004,
+        "delta": -0.0012520868113522488,
+        "low": -0.003973575763959291,
+        "high": 0.0008481854170512607,
+        "p_value": 0.426,
+        "a_better_prob": 0.787,
+        "n_units": 81,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.003431119072970493,
+        "significant": false
+      },
+      "cer": {
+        "rate_a": 0.07748795226803334,
+        "rate_b": 0.07764093934062571,
+        "delta": -0.00015298707259236988,
+        "low": -0.0006651061455924448,
+        "high": 0.00027153030617183867,
+        "p_value": 0.6862,
+        "a_better_prob": 0.6569,
+        "n_units": 81,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.0006665663232268494,
+        "significant": false
+      }
+    }
+  },
+  "path": "runs/probe/hausa-asr-dev100-cpu/compare.md",
+  "json_path": "runs/probe/hausa-asr-dev100-cpu/compare.json"
+}

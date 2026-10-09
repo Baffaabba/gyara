@@ -1,0 +1,14 @@
+{
+  "audio": "data\\fleurs\\test\\10529716865753778831.wav",
+  "model": "NCAIR1/Hausa-ASR",
+  "segments": [
+    {
+      "start": 3.386,
+      "end": 26.118,
+      "text": "akan iya karci birin da ke kusa da alama ba za a karɓa ba, koda yake ana iya karɓar kudin britaniya da amurka, bincike tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+      "avg_logprob": -0.14680157601833344,
+      "flags": [],
+      "words": null
+    }
+  ]
+}

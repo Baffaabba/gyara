@@ -11,8 +11,9 @@ defines the two non-raw ones:
 
 ``lenient``   ``standard`` plus folding hooked letters to plain ones
               (ɓ→b, ɗ→d, ƙ→k, 'y→y). Many keyboards and many ASR models cannot
-              produce hooks. The gap between ``standard`` and ``lenient`` WER is
-              therefore a direct measure of how many errors are *hook errors*.
+              produce hooks. The gap between ``standard`` and ``lenient`` WER counts the
+              hook-only disagreements. It does not say which side is wrong:
+              on FLEURS the reference often omits hooks the model wrote.
 
 The rules are versioned. Any change to them changes every benchmark number, so
 bump ``RULES_VERSION`` and re-run the baselines. The written rules, with the

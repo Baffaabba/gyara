@@ -98,6 +98,10 @@ class PairedResult:
         d["significant"] = self.significant
         return d
 
+    def p_str(self) -> str:
+        """The p-value as text, never claiming more precision than the bootstrap has."""
+        return fmt_p(self.p_value, self.resamples)
+
     def sentence(self, a: str = "A", b: str = "B") -> str:
         """Plain-English verdict, written so it cannot over-claim."""
         pp = lambda x: f"{abs(x) * 100:.2f}"  # noqa: E731
@@ -113,8 +117,24 @@ class PairedResult:
         better, worse = (a, b) if self.delta < 0 else (b, a)
         return (
             f"{better} makes fewer errors than {worse}: {pp(self.delta)} points "
-            f"(95% CI {self.low * 100:+.2f} to {self.high * 100:+.2f}, p={self.p_value:.4f})."
+            f"(95% CI {self.low * 100:+.2f} to {self.high * 100:+.2f}, {self.p_str()})."
         )
+
+
+def fmt_p(p: float, resamples: int) -> str:
+    """Format a two-sided bootstrap p-value honestly.
+
+    With ``B`` resamples the smallest non-zero two-sided p is ``2/B``. A p of 0
+    therefore means "under 2/B", not zero. Below 0.001 we print the usual
+    ``p < 0.001`` (or ``p < 2/B`` when the bootstrap cannot resolve 0.001).
+    """
+    if p is None or (isinstance(p, float) and math.isnan(p)):
+        return "p n/a"
+    floor = 2.0 / resamples if resamples else 1.0
+    if p < floor or p < 0.001:
+        bound = max(floor, 0.001)
+        return "p < 0.001" if bound <= 0.001 else f"p < {bound:.2g}"
+    return f"p = {p:.4f}"
 
 
 def paired_bootstrap(

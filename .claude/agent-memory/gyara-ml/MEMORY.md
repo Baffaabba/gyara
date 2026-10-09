@@ -1,1 +1,1 @@
-- [Laptop env gotchas](project_laptop_env.md) — no GPU/token, flaky HF CDN, write_text CRLF, slow tests ~11 min
+- [Laptop env gotchas](project_laptop_env.md) — CPU only (Hausa-ASR loads, ~20 min/100 clips), flaky HF CDN, CRLF writes, sed/heredoc newline mangling

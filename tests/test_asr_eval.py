@@ -340,6 +340,154 @@ def test_metrics_json_is_strict_json(tiny_manifest, tmp_path):
     assert "CI n/a" in (rd / "report.md").read_text(encoding="utf-8")
 
 
+class _GuardedSugg:
+    """Looks like gyara.suggest.Suggester (openai backend): one fix, one harm,
+    one cosmetic change, one guard rejection."""
+
+    backend, model_id, base_url = "openai", "fake/llm", "http://localhost:9"
+    max_new_tokens, repetition_penalty = 256, 1.0
+
+    @dataclass
+    class S:
+        suggested: str
+        accepted_by_guard: bool
+        reason: str
+
+    def suggest(self, text):
+        if text == "ruwa yana da daɗi":
+            return self.S(text, False, "rewrites a word: 'ruwa' -> 'ruwan'")
+        out = {"kasar najeriya tana da girma": "ƙasar najeriya tana da girma",  # fixes a hook
+               "mun gode sosai": "mun gode sosae",                              # makes it worse
+               "sannu da zuwa": "Sannu da zuwa."}.get(text, text)               # case/punct only
+        return self.S(out, True, "ok" if out != text else "no change")
+
+
+def test_suggestion_effect_counts_wording_and_meta(tiny_manifest, tmp_path):
+    rd = evaluate.run("fake/good", tiny_manifest, out_dir=tmp_path / "runs",
+                      transcriber=_fake(GOOD), suggester=_GuardedSugg(), b=300)
+    m = json.loads((rd / "metrics.json").read_text(encoding="utf-8"))
+    sc = m["suggestions"]
+    assert (sc["changed_any"], sc["changed_beyond_case_punctuation"],
+            sc["changed_after_standard_normalisation"]) == (3, 2, 2)
+    assert sc["guard_rejections"] == {"total": 1, "by_reason": {"rewrites a word: 'ruwa' -> 'ruwan'": 1}}
+    se = m["modes"]["standard"]["suggestion_effect"]
+    assert (se["wer_improved_utterances"], se["wer_worsened_utterances"],
+            se["wer_unchanged_utterances"]) == (1, 1, 5)
+
+    report = (rd / "report.md").read_text(encoding="utf-8")
+    assert "every suggestion accepted without review" in report
+    assert "upper bound where" not in report and "This is not an upper bound" in report
+    assert "1 utterance better, 1 worse and 5 no different" in report
+
+    meta = json.loads((rd / "meta.json").read_text(encoding="utf-8"))
+    sg = meta["suggester"]
+    assert sg["backend"] == "openai" and sg["model_id"] == "fake/llm"
+    assert sg["quantisation"].startswith("set by the server")
+    assert len(sg["prompt_guard_id"]) == 12
+    assert isinstance(meta["suggest_seconds"], float) and meta["suggest_seconds"] >= 0
+    assert meta["suggest_guard_rejections"]["total"] == 1
+    preds = [json.loads(l) for l in (rd / "predictions.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert {"suggest_accepted", "suggest_reason"} <= set(preds[0])
+
+
+def _write_run(rd, preds, meta=None):
+    rd.mkdir(parents=True, exist_ok=True)
+    (rd / "predictions.jsonl").write_text(
+        "".join(json.dumps(p, ensure_ascii=False) + "\n" for p in preds), encoding="utf-8")
+    if meta is not None:
+        (rd / "meta.json").write_text(json.dumps(meta), encoding="utf-8")
+    return rd
+
+
+def test_old_suggest_run_meta_says_not_recorded(tmp_path):
+    preds = [{"id": f"u{i}", "ref": "ƙasa ce", "hyp": "kasa ce", "hyp_suggested": "ƙasa ce",
+              "group": f"g{i}"} for i in range(4)]
+    rd = _write_run(tmp_path / "old", preds,
+                    meta={"model_id": "m", "suggester": "Suggester", "rtf": 0.26, "manifest": "x/test.jsonl"})
+    m = evaluate.score_run(rd, b=200)
+    meta = json.loads((rd / "meta.json").read_text(encoding="utf-8"))
+    for d in (meta, m["meta"]):
+        assert d["suggester"]["class"] == "Suggester"
+        assert d["suggester"]["quantisation"] == "not recorded"
+        assert d["suggester"]["backend"] == "not recorded"
+        assert d["suggest_seconds"] == "not recorded"
+        assert d["rtf"] == 0.26  # recorded values are kept
+    assert m["suggestions"]["guard_rejections"] == "not recorded"
+    assert "Guard rejections: not recorded" in (rd / "report.md").read_text(encoding="utf-8")
+
+
+def test_hook_gap_is_reported_by_direction_not_blamed_on_the_model(tiny_manifest, tmp_path):
+    rd = evaluate.run("fake/good", tiny_manifest, out_dir=tmp_path / "runs",
+                      transcriber=_fake(GOOD), b=200)
+    m = json.loads((rd / "metrics.json").read_text(encoding="utf-8"))
+    assert m["standard_minus_lenient_wer"] == pytest.approx(1 / 25)
+    hs = m["hook_substitutions"]  # GOOD writes "kasar" for reference "ƙasar"
+    assert (hs["hook_only_substitutions"], hs["ref_hooked_hyp_plain"], hs["hyp_hooked_ref_plain"]) == (1, 1, 0)
+    report = (rd / "report.md").read_text(encoding="utf-8")
+    assert "mistakes only" not in report and "does not say which side is wrong" in report
+    assert "hook in the reference, not in the transcript | 1" in report
+
+    # The reverse direction: the model writes the hook the reference left out.
+    preds = [{"id": "a", "ref": "daya da hudu", "hyp": "ɗaya da huɗu", "group": "1"},
+             {"id": "b", "ref": "'yan ƙasa", "hyp": "yan kasa", "group": "2"}]
+    m2 = evaluate.score_run(_write_run(tmp_path / "rev", preds), b=100)
+    hs2 = m2["hook_substitutions"]
+    assert (hs2["hyp_hooked_ref_plain"], hs2["ref_hooked_hyp_plain"], hs2["both_hooked"]) == (2, 2, 0)
+
+
+@pytest.mark.parametrize("field,expect,absent", [
+    ("group", "`group`", "`speaker`"),
+    ("speaker", "`speaker` for 3 utterances", "sentence id"),
+    (None, "resampled independently", "sentence id"),
+])
+def test_cluster_label_names_the_key_actually_used(tmp_path, field, expect, absent):
+    preds = []
+    for i in range(3):
+        p = {"id": f"u{i}", "ref": "sannu da zuwa", "hyp": "sannu zuwa", "group": None, "speaker": None}
+        if field:
+            p[field] = f"k{i % 2}"
+        preds.append(p)
+    m = evaluate.score_run(_write_run(tmp_path / str(field), preds), b=100)
+    assert m["n"]["cluster_unit"] == (field or "utterance")
+    head = (tmp_path / str(field) / "report.md").read_text(encoding="utf-8").split("## Headline")[0]
+    assert expect in head and absent not in head
+
+
+def test_leaderboard_names_the_test_set_and_has_cer_ci(tmp_path):
+    preds = [{"id": f"fleurs_ha_ng_test_{i}", "ref": "sannu da zuwa", "hyp": "sannu zuwa",
+              "group": str(i), "source": "fleurs"} for i in range(5)]
+    rd = _write_run(tmp_path / "r", preds, meta={"model_id": "m", "test_set": "test",
+                                                  "manifest": str(tmp_path / "nowhere" / "test.jsonl")})
+    evaluate.score_run(rd, b=100)
+    board = evaluate.leaderboard([rd])
+    assert "| m | fleurs ha_ng test | 5 |" in board
+    assert "CER std % [95% CI]" in board.splitlines()[0]
+    # A fetch-fleurs summary next to the manifest wins, but only if its row count matches.
+    man = tmp_path / "data" / "train.jsonl"
+    man.parent.mkdir()
+    (man.parent / "train.summary.json").write_text(json.dumps(
+        {"repo": "google/fleurs", "config": "ha_ng", "split": "train", "rows": 5, "limit": 100}))
+    assert evaluate._test_set_label(man, [f"x{i}" for i in range(5)]) == "fleurs ha_ng train (first 100)"
+    assert evaluate._test_set_label(man, [f"x{i}" for i in range(4)]) == "data train"
+
+
+def test_compare_reports_all_six_tests_and_no_zero_p(tiny_manifest, tmp_path):
+    good = evaluate.run("fake/good", tiny_manifest, out_dir=tmp_path / "runs",
+                        transcriber=_fake(GOOD), b=200)
+    bad = evaluate.run("fake/bad", tiny_manifest, out_dir=tmp_path / "runs",
+                       transcriber=_fake(BAD), b=200)
+    res = evaluate.compare(good, bad, b=500)
+    assert set(res["modes"]) == {"raw", "standard", "lenient"} and res["n_tests"] == 6
+    assert res["headline"] == "standard WER"
+    assert res["wer"] == res["modes"]["standard"]["wer"]  # top level stays the headline
+    md = (good / "compare.md").read_text(encoding="utf-8")
+    rows = [l for l in md.splitlines() if l.startswith("| ") and ("WER" in l or "CER" in l)
+            and not l.startswith("| mode")]
+    assert len(rows) == 6 and "| **standard** | WER |" in md
+    assert "0.0000" not in md
+    assert "\\" not in res["run_a"]  # POSIX paths, so a re-run on Windows does not churn the file
+
+
 # --- slow: real model + real data -------------------------------------------------------------
 
 

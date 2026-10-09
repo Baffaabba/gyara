@@ -21,7 +21,7 @@ the reference and to the model output.
 | --- | --- | --- |
 | `raw` | Collapses whitespace only | Showing how much the rules matter |
 | `standard` | All rules below. Hook errors still count | **The headline number** |
-| `lenient` | `standard`, plus ɓ→b, ɗ→d, ƙ→k, 'y→y | Seeing how many errors are hook errors |
+| `lenient` | `standard`, plus ɓ→b, ɗ→d, ƙ→k, 'y→y | Seeing how many disagreements are hook-only (either side) |
 
 `standard − lenient` is the share of word errors caused only by a missing or
 wrong hooked letter. That is a useful diagnostic on its own: it tells a

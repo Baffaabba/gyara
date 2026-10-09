@@ -16,8 +16,9 @@ means in this repo.
   per-utterance WERs (overweights short clips). `CorpusScore.wer` does this.
 - Always three modes: `raw` (whitespace only), `standard` (orthography and
   formatting normalised, hook errors still count), `lenient` (hooks folded).
-  `standard` is the headline. `standard − lenient` = share of errors that are
-  hook errors. Report CER alongside; for Hausa, CER is less sensitive to word
+  `standard` is the headline. `standard − lenient` = hook-only disagreements;
+  it does not say which side is wrong (FLEURS references often omit hooks), so
+  report its direction split (`hook_substitutions` in metrics.json). Report CER alongside; for Hausa, CER is less sensitive to word
   segmentation disagreements.
 - The normaliser is applied identically to reference and hypothesis.
   `RULES_VERSION` is stamped into every `metrics.json`. Numbers from different

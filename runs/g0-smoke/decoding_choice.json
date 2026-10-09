@@ -1,0 +1,10 @@
+{
+  "chosen_language": "hausa",
+  "configs_tried": 2,
+  "dev_set": "FLEURS ha_ng validation, first 100 utterances",
+  "dev_standard_wer": {
+    "hausa": 0.30175292153589317,
+    "auto": 0.30175292153589317
+  },
+  "rule": "lower standard WER on dev wins; ties keep 'hausa'. Test never used."
+}

@@ -1,0 +1,143 @@
+{
+  "run_a": "runs/hausa-asr-fleurs",
+  "run_b": "runs/whisper-small-fleurs",
+  "label_a": "NCAIR1/Hausa-ASR",
+  "label_b": "openai/whisper-small",
+  "mode": "standard",
+  "headline": "standard WER",
+  "n_tests": 6,
+  "rules_version": "1.0.0",
+  "n_common": 621,
+  "dropped_a": 0,
+  "dropped_b": 0,
+  "cluster_keys": {
+    "group": 621,
+    "speaker": 0,
+    "own_cluster": 0,
+    "unit": "group"
+  },
+  "wer": {
+    "rate_a": 0.30187169067848785,
+    "rate_b": 0.8981036818125847,
+    "delta": -0.5962319911340969,
+    "low": -0.6100343351013485,
+    "high": -0.5816610654702066,
+    "p_value": 0.0,
+    "a_better_prob": 1.0,
+    "n_units": 331,
+    "unit": "cluster",
+    "resamples": 10000,
+    "mde": 0.020140374652951647,
+    "significant": true
+  },
+  "cer": {
+    "rate_a": 0.10080799441831154,
+    "rate_b": 0.3088159168148365,
+    "delta": -0.20800792239652496,
+    "low": -0.2166663404441552,
+    "high": -0.19948960339278515,
+    "p_value": 0.0,
+    "a_better_prob": 1.0,
+    "n_units": 331,
+    "unit": "cluster",
+    "resamples": 10000,
+    "mde": 0.012133840308739353,
+    "significant": true
+  },
+  "sentence_wer": "NCAIR1/Hausa-ASR makes fewer errors than openai/whisper-small: 59.62 points (95% CI -61.00 to -58.17, p < 0.001).",
+  "sentence_cer": "NCAIR1/Hausa-ASR makes fewer errors than openai/whisper-small: 20.80 points (95% CI -21.67 to -19.95, p < 0.001).",
+  "modes": {
+    "raw": {
+      "wer": {
+        "rate_a": 0.44479273285568066,
+        "rate_b": 0.9469037871033776,
+        "delta": -0.502111054247697,
+        "low": -0.5180880738140798,
+        "high": -0.4856922313250297,
+        "p_value": 0.0,
+        "a_better_prob": 1.0,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.023170231837794812,
+        "significant": true
+      },
+      "cer": {
+        "rate_a": 0.1644878315185855,
+        "rate_b": 0.36056023938742304,
+        "delta": -0.19607240786883753,
+        "low": -0.20425270457357447,
+        "high": -0.1879444216727553,
+        "p_value": 0.0,
+        "a_better_prob": 1.0,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.011697804602015185,
+        "significant": true
+      }
+    },
+    "standard": {
+      "wer": {
+        "rate_a": 0.30187169067848785,
+        "rate_b": 0.8981036818125847,
+        "delta": -0.5962319911340969,
+        "low": -0.6100343351013485,
+        "high": -0.5816610654702066,
+        "p_value": 0.0,
+        "a_better_prob": 1.0,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.020140374652951647,
+        "significant": true
+      },
+      "cer": {
+        "rate_a": 0.10080799441831154,
+        "rate_b": 0.3088159168148365,
+        "delta": -0.20800792239652496,
+        "low": -0.2166663404441552,
+        "high": -0.19948960339278515,
+        "p_value": 0.0,
+        "a_better_prob": 1.0,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.012133840308739353,
+        "significant": true
+      }
+    },
+    "lenient": {
+      "wer": {
+        "rate_a": 0.27330378032262037,
+        "rate_b": 0.893793867750277,
+        "delta": -0.6204900874276567,
+        "low": -0.6341115544192043,
+        "high": -0.6059822670051435,
+        "p_value": 0.0,
+        "a_better_prob": 1.0,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.019979404165929724,
+        "significant": true
+      },
+      "cer": {
+        "rate_a": 0.09336891531263723,
+        "rate_b": 0.30392189980745193,
+        "delta": -0.2105529844948147,
+        "low": -0.21905007702522403,
+        "high": -0.20225290211724292,
+        "p_value": 0.0,
+        "a_better_prob": 1.0,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000,
+        "mde": 0.011945754485991136,
+        "significant": true
+      }
+    }
+  },
+  "path": "runs/hausa-asr-fleurs/compare.md",
+  "json_path": "runs/hausa-asr-fleurs/compare.json"
+}

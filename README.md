@@ -215,7 +215,8 @@ Run `gyara --help` for everything else.
 - **Hausa-aware scoring.** Curly vs straight apostrophes, ƴ vs 'y, capital
   hooked letters and digits vs number words are not counted as errors. A
   missing hook (`kasa` for `ƙasa`) still is, because those are different words.
-  The `lenient` score shows how many errors are hook errors.
+  The `lenient` score shows how much of the gap is hook-only disagreement
+  (in either direction: test-set references sometimes miss hooks too).
 - **Pooled WER**, not an average of per-clip rates.
 - **Confidence intervals** from a cluster bootstrap over speakers (or FLEURS
   sentences), so correlated clips don't make results look more certain than

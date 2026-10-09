@@ -1,0 +1,45 @@
+{
+  "model": "NCAIR1/Hausa-ASR",
+  "decoding": {
+    "model_id": "NCAIR1/Hausa-ASR",
+    "device": "cuda",
+    "dtype": "float16",
+    "language": "hausa",
+    "language_used": "hausa",
+    "task": "transcribe",
+    "num_beams": 1,
+    "batch_size": 8,
+    "fallback_temperatures": [
+      0.2,
+      0.4,
+      0.6
+    ],
+    "no_repeat_ngram_size_on_retry": 4
+  },
+  "clip_id": "fleurs_ha_ng_test_13605051311919988382",
+  "clip_seconds": 30.0,
+  "wall_seconds_incl_load": 42.6,
+  "reference": "A kan iyakar tsibirin da ke kusa da alama ba za a karɓa ba, kodayake ana iya karɓar kuɗin Birtaniya da Amurka; bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+  "hypothesis": "akan iya karin tibirin da ke kusa da alama ba za a karɓa ba, ko da yake ana iya karɓar kudin birtaniya da amurka. bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+  "segments": [
+    {
+      "start": 3.322,
+      "end": 26.95,
+      "text": "akan iya karin tibirin da ke kusa da alama ba za a karɓa ba, ko da yake ana iya karɓar kudin birtaniya da amurka. bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+      "avg_logprob": -0.14599527418613434,
+      "compression_ratio": 1.476923076923077,
+      "flags": [],
+      "words": null
+    }
+  ],
+  "env": {
+    "gyara_version": "0.1.0",
+    "installed_from": "git+https://github.com/Baffaabba/gyara@feat/foundation",
+    "git_commit": "f7351d6cda4dc3afecb89fdc3ed48a2b5b5b772e",
+    "gpu": "Tesla T4",
+    "gpu_memory_gb": 15.6,
+    "torch": "2.11.0+cu130",
+    "transformers": "4.57.6",
+    "python": "3.13.15"
+  }
+}

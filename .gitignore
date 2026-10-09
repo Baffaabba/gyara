@@ -16,7 +16,8 @@ data/heldout/*
 !data/heldout/README.md
 workspace/
 exports/
-runs/*/predictions.jsonl
+runs/**/predictions.jsonl
+runs/**/*.log
 # Pipeline smoke tests use stand-in models; their numbers are not Gyara results.
 runs/smoke-*/
 checkpoints/
@@ -36,8 +37,13 @@ checkpoints/
 hf_token*
 
 # Keep small, committed benchmark summaries.
-!runs/*/metrics.json
-!runs/*/report.md
+!runs/**/metrics.json
+!runs/**/report.md
+# Predictions on public FLEURS data (CC-BY-4.0) are kept so anyone can re-score.
+# Own-audio runs must not be named or placed like these.
+!runs/*fleurs*/predictions.jsonl
+!runs/dev/*/predictions.jsonl
+!runs/probe/*/predictions.jsonl
 
 .claude/worktrees/
 .claude/settings.local.json

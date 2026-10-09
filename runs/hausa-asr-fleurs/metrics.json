@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "model_id": "NCAIR1/Hausa-ASR",
+    "manifest": "data/fleurs/test.jsonl",
+    "manifest_sha256": "05eecae508dc4ddb2c21e9c9f8206f9edc4b83de84d1a35150ab58db351a8ca1",
+    "test_set": "test",
+    "n": 621,
+    "limit": null,
+    "device": "cuda",
+    "language": "hausa",
+    "decoding": {
+      "model_id": "NCAIR1/Hausa-ASR",
+      "device": "cuda",
+      "dtype": "float16",
+      "language": "hausa",
+      "language_used": "hausa",
+      "task": "transcribe",
+      "num_beams": 1,
+      "batch_size": 8,
+      "fallback_temperatures": [
+        0.2,
+        0.4,
+        0.6
+      ],
+      "no_repeat_ngram_size_on_retry": 4
+    },
+    "started_utc": "2026-10-09T10:58:08+00:00",
+    "wall_seconds": 304.07,
+    "audio_seconds": 12023.94,
+    "rtf": 0.0253,
+    "gyara_version": "0.1.0",
+    "rules_version": "1.0.0",
+    "suggester": null,
+    "suggest_errors": null,
+    "versions": {
+      "python": "3.13.15",
+      "torch": "2.11.0+cu130",
+      "transformers": "4.57.6"
+    },
+    "test_set_label": "fleurs ha_ng test",
+    "scored_rules_version": "1.0.0"
+  },
+  "n": {
+    "utterances": 621,
+    "clusters": 331,
+    "cluster_unit": "group",
+    "cluster_keys": {
+      "group": 621,
+      "speaker": 0,
+      "own_cluster": 0,
+      "unit": "group"
+    },
+    "cluster_description": "`group` (FLEURS sentence id) for 621 utterances",
+    "hours": 3.34,
+    "ref_words_standard": 16242,
+    "bootstrap_resamples": 10000
+  },
+  "modes": {
+    "raw": {
+      "n": 621,
+      "n_scored": 621,
+      "ref_words": 15632,
+      "ref_chars": 87891,
+      "wer": {
+        "estimate": 0.44479273285568066,
+        "low": 0.4214600710338047,
+        "high": 0.4703166319634351,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000
+      },
+      "cer": {
+        "estimate": 0.1644878315185855,
+        "low": 0.14604795549165298,
+        "high": 0.1860164275377532,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000
+      },
+      "substitutions": 5231,
+      "deletions": 453,
+      "insertions": 1269,
+      "breakdown": {
+        "dialect": {},
+        "source": {
+          "fleurs": {
+            "n": 621,
+            "n_scored": 621,
+            "ref_words": 15632,
+            "ref_chars": 87891,
+            "wer": {
+              "estimate": 0.44479273285568066,
+              "low": 0.4214600710338047,
+              "high": 0.4703166319634351,
+              "n_units": 331,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.1644878315185855,
+              "low": 0.14604795549165298,
+              "high": 0.1860164275377532,
+              "n_units": 331,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 5231,
+            "deletions": 453,
+            "insertions": 1269
+          }
+        },
+        "speaker": {},
+        "duration": {
+          "15-30s": {
+            "n": 336,
+            "n_scored": 336,
+            "ref_words": 9094,
+            "ref_chars": 51369,
+            "wer": {
+              "estimate": 0.4274246756102925,
+              "low": 0.4041522972771017,
+              "high": 0.4514212408777878,
+              "n_units": 223,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.14349121065233897,
+              "low": 0.12834571626495278,
+              "high": 0.16009481829300112,
+              "n_units": 223,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 3047,
+            "deletions": 273,
+            "insertions": 567
+          },
+          "5-15s": {
+            "n": 220,
+            "n_scored": 220,
+            "ref_words": 4003,
+            "ref_chars": 22307,
+            "wer": {
+              "estimate": 0.43017736697476894,
+              "low": 0.4018003225140076,
+              "high": 0.4588519857475188,
+              "n_units": 147,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.14981844264132335,
+              "low": 0.13290505409203832,
+              "high": 0.1688436022336684,
+              "n_units": 147,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 1372,
+            "deletions": 128,
+            "insertions": 222
+          },
+          ">30s": {
+            "n": 65,
+            "n_scored": 65,
+            "ref_words": 2535,
+            "ref_chars": 14215,
+            "wer": {
+              "estimate": 0.5301775147928994,
+              "low": 0.436379900278574,
+              "high": 0.6484016192144598,
+              "n_units": 50,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.2633837495603236,
+              "low": 0.1774243612239507,
+              "high": 0.3741372188075775,
+              "n_units": 50,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 812,
+            "deletions": 52,
+            "insertions": 480
+          }
+        }
+      }
+    },
+    "standard": {
+      "n": 621,
+      "n_scored": 621,
+      "ref_words": 16242,
+      "ref_chars": 88862,
+      "wer": {
+        "estimate": 0.30187169067848785,
+        "low": 0.28626471447835217,
+        "high": 0.31838945584297457,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000
+      },
+      "cer": {
+        "estimate": 0.10080799441831154,
+        "low": 0.09001553485207428,
+        "high": 0.11346589328643274,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000
+      },
+      "substitutions": 3539,
+      "deletions": 497,
+      "insertions": 867,
+      "breakdown": {
+        "dialect": {},
+        "source": {
+          "fleurs": {
+            "n": 621,
+            "n_scored": 621,
+            "ref_words": 16242,
+            "ref_chars": 88862,
+            "wer": {
+              "estimate": 0.30187169067848785,
+              "low": 0.28626471447835217,
+              "high": 0.31838945584297457,
+              "n_units": 331,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.10080799441831154,
+              "low": 0.09001553485207428,
+              "high": 0.11346589328643274,
+              "n_units": 331,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 3539,
+            "deletions": 497,
+            "insertions": 867
+          }
+        },
+        "speaker": {},
+        "duration": {
+          "15-30s": {
+            "n": 336,
+            "n_scored": 336,
+            "ref_words": 9382,
+            "ref_chars": 51676,
+            "wer": {
+              "estimate": 0.2856533788104882,
+              "low": 0.26814222570099916,
+              "high": 0.30376537481678295,
+              "n_units": 223,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.08344299094357148,
+              "low": 0.07530508690722773,
+              "high": 0.09238596672527243,
+              "n_units": 223,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 2015,
+            "deletions": 290,
+            "insertions": 375
+          },
+          "5-15s": {
+            "n": 220,
+            "n_scored": 220,
+            "ref_words": 4137,
+            "ref_chars": 22392,
+            "wer": {
+              "estimate": 0.3142373700749335,
+              "low": 0.2903297157401619,
+              "high": 0.33912061303312624,
+              "n_units": 147,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.10468024294390854,
+              "low": 0.09241466967266755,
+              "high": 0.1198126879595457,
+              "n_units": 147,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 986,
+            "deletions": 143,
+            "insertions": 171
+          },
+          ">30s": {
+            "n": 65,
+            "n_scored": 65,
+            "ref_words": 2723,
+            "ref_chars": 14794,
+            "wer": {
+              "estimate": 0.33896437752478886,
+              "low": 0.2823883031955638,
+              "high": 0.4023009765154414,
+              "n_units": 50,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.15560362309044207,
+              "low": 0.10336303943133805,
+              "high": 0.21873995540904884,
+              "n_units": 50,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 538,
+            "deletions": 64,
+            "insertions": 321
+          }
+        }
+      },
+      "top_confusions": [
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "da",
+          "count": 73
+        },
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "a",
+          "count": 40
+        },
+        {
+          "op": "D",
+          "ref": "da",
+          "hyp": "",
+          "count": 26
+        },
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "ɗaya",
+          "count": 22
+        },
+        {
+          "op": "D",
+          "ref": "su",
+          "hyp": "",
+          "count": 21
+        },
+        {
+          "op": "S",
+          "ref": "daya",
+          "hyp": "ɗaya",
+          "count": 19
+        },
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "ba",
+          "count": 19
+        },
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "na",
+          "count": 17
+        },
+        {
+          "op": "S",
+          "ref": "shi",
+          "hyp": "shine",
+          "count": 16
+        },
+        {
+          "op": "D",
+          "ref": "yi",
+          "hyp": "",
+          "count": 16
+        },
+        {
+          "op": "D",
+          "ref": "goma",
+          "hyp": "",
+          "count": 15
+        },
+        {
+          "op": "D",
+          "ref": "ne",
+          "hyp": "",
+          "count": 15
+        },
+        {
+          "op": "S",
+          "ref": "da",
+          "hyp": "ta",
+          "count": 14
+        },
+        {
+          "op": "D",
+          "ref": "na",
+          "hyp": "",
+          "count": 14
+        },
+        {
+          "op": "D",
+          "ref": "a",
+          "hyp": "",
+          "count": 14
+        },
+        {
+          "op": "D",
+          "ref": "ka",
+          "hyp": "",
+          "count": 13
+        },
+        {
+          "op": "D",
+          "ref": "ke",
+          "hyp": "",
+          "count": 13
+        },
+        {
+          "op": "S",
+          "ref": "na",
+          "hyp": "da",
+          "count": 13
+        },
+        {
+          "op": "S",
+          "ref": "hada",
+          "hyp": "haɗa",
+          "count": 13
+        },
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "ya",
+          "count": 12
+        },
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "alif",
+          "count": 12
+        },
+        {
+          "op": "S",
+          "ref": "wadanda",
+          "hyp": "waɗanda",
+          "count": 11
+        },
+        {
+          "op": "S",
+          "ref": "ashirin",
+          "hyp": "ishirin",
+          "count": 10
+        },
+        {
+          "op": "D",
+          "ref": "ba",
+          "hyp": "",
+          "count": 10
+        },
+        {
+          "op": "I",
+          "ref": "",
+          "hyp": "za",
+          "count": 10
+        }
+      ]
+    },
+    "lenient": {
+      "n": 621,
+      "n_scored": 621,
+      "ref_words": 16242,
+      "ref_chars": 88809,
+      "wer": {
+        "estimate": 0.27330378032262037,
+        "low": 0.2576532831271279,
+        "high": 0.28983066755499526,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000
+      },
+      "cer": {
+        "estimate": 0.09336891531263723,
+        "low": 0.08262614107263365,
+        "high": 0.10596754475325292,
+        "n_units": 331,
+        "unit": "cluster",
+        "resamples": 10000
+      },
+      "substitutions": 3071,
+      "deletions": 499,
+      "insertions": 869,
+      "breakdown": {
+        "dialect": {},
+        "source": {
+          "fleurs": {
+            "n": 621,
+            "n_scored": 621,
+            "ref_words": 16242,
+            "ref_chars": 88809,
+            "wer": {
+              "estimate": 0.27330378032262037,
+              "low": 0.2576532831271279,
+              "high": 0.28983066755499526,
+              "n_units": 331,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.09336891531263723,
+              "low": 0.08262614107263365,
+              "high": 0.10596754475325292,
+              "n_units": 331,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 3071,
+            "deletions": 499,
+            "insertions": 869
+          }
+        },
+        "speaker": {},
+        "duration": {
+          "15-30s": {
+            "n": 336,
+            "n_scored": 336,
+            "ref_words": 9382,
+            "ref_chars": 51638,
+            "wer": {
+              "estimate": 0.2553826476231081,
+              "low": 0.23782258568586123,
+              "high": 0.2730470955796637,
+              "n_units": 223,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.07581625934389404,
+              "low": 0.06782842613409287,
+              "high": 0.08452160891596404,
+              "n_units": 223,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 1731,
+            "deletions": 290,
+            "insertions": 375
+          },
+          "5-15s": {
+            "n": 220,
+            "n_scored": 220,
+            "ref_words": 4137,
+            "ref_chars": 22380,
+            "wer": {
+              "estimate": 0.2871646120377085,
+              "low": 0.2634599700299823,
+              "high": 0.31227826862502894,
+              "n_units": 147,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.09714030384271671,
+              "low": 0.08489141407608208,
+              "high": 0.11227926051807392,
+              "n_units": 147,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 870,
+            "deletions": 145,
+            "insertions": 173
+          },
+          ">30s": {
+            "n": 65,
+            "n_scored": 65,
+            "ref_words": 2723,
+            "ref_chars": 14791,
+            "wer": {
+              "estimate": 0.3139919206757253,
+              "low": 0.25667531174342023,
+              "high": 0.37809881089847797,
+              "n_units": 50,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "cer": {
+              "estimate": 0.14894192414305996,
+              "low": 0.0967108326894944,
+              "high": 0.2121219284202383,
+              "n_units": 50,
+              "unit": "cluster",
+              "resamples": 10000
+            },
+            "substitutions": 470,
+            "deletions": 64,
+            "insertions": 321
+          }
+        }
+      }
+    }
+  },
+  "standard_minus_lenient_wer": 0.028567910355867476,
+  "hook_substitutions": {
+    "hook_only_substitutions": 432,
+    "hyp_hooked_ref_plain": 301,
+    "ref_hooked_hyp_plain": 128,
+    "both_hooked": 3,
+    "ref_words_with_hook_share": 0.04038911464105406,
+    "hyp_words_with_hook_share": 0.05471947989405249
+  },
+  "suggestions": null,
+  "confidence": {
+    "spearman_avg_logprob_vs_wer": -0.5740809948905683,
+    "n": 621,
+    "note": "negative rho means lower confidence goes with more errors (what we want)"
+  },
+  "flags": {
+    "long_clip_vad": 64
+  },
+  "loop_flagged": 0
+}

@@ -65,6 +65,26 @@ def test_paired_bootstrap_detects_real_gain_and_not_noise():
     assert "No reliable difference" in same.sentence()
 
 
+def test_p_value_is_never_printed_as_zero():
+    # Bug: a huge effect printed "p=0.0000". With B resamples the smallest
+    # non-zero two-sided p is 2/B, so 0 means "below the bootstrap's resolution".
+    rng = np.random.default_rng(3)
+    n = rng.integers(10, 30, 300)
+    eb = rng.binomial(n, 0.6)
+    ea = rng.binomial(n, 0.1)
+    r = stats.paired_bootstrap(ea, eb, n, b=10_000)
+    assert r.p_value == 0.0
+    assert r.p_str() == "p < 0.001"
+    assert "p < 0.001" in r.sentence("A", "B") and "0.0000" not in r.sentence("A", "B")
+    # With few resamples the bootstrap cannot resolve 0.001: say what it can resolve.
+    assert stats.fmt_p(0.0, 500) == "p < 0.004"
+    assert stats.fmt_p(0.0, 10_000) == "p < 0.001"
+    assert stats.fmt_p(0.0004, 10_000) == "p < 0.001"
+    assert stats.fmt_p(0.0016, 10_000) == "p = 0.0016"
+    assert stats.fmt_p(0.7, 10_000) == "p = 0.7000"
+    assert stats.fmt_p(float("nan"), 0) == "p n/a"
+
+
 def test_spearman():
     assert stats.spearman([1, 2, 3, 4], [10, 20, 30, 40]) == pytest.approx(1.0)
     assert stats.spearman([1, 2, 3, 4], [4, 3, 2, 1]) == pytest.approx(-1.0)

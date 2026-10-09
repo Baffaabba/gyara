@@ -1,0 +1,48 @@
+{
+  "model": "NCAIR1/N-ATLaS",
+  "quantization": {
+    "quant_method": "bitsandbytes",
+    "_load_in_8bit": false,
+    "_load_in_4bit": true,
+    "llm_int8_threshold": 6.0,
+    "llm_int8_skip_modules": null,
+    "llm_int8_enable_fp32_cpu_offload": false,
+    "llm_int8_has_fp16_weight": false,
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_use_double_quant": false,
+    "bnb_4bit_compute_dtype": "float16",
+    "bnb_4bit_quant_storage": "uint8",
+    "load_in_4bit": true,
+    "load_in_8bit": false
+  },
+  "load_seconds": 424.6,
+  "generate_seconds": 6.6,
+  "gpu_peak_memory_gb": 7.58,
+  "input": "akan iya karin tibirin da ke kusa da alama ba za a karɓa ba, ko da yake ana iya karɓar kudin birtaniya da amurka. bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+  "raw_output": "Akan iya karin tibirin da ke kusa da alama ba za a karɓa ba, ko da yake ana iya karɓar kudin birtaniya da amurka. bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+  "suggestion": {
+    "original": "akan iya karin tibirin da ke kusa da alama ba za a karɓa ba, ko da yake ana iya karɓar kudin birtaniya da amurka. bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+    "suggested": "Akan iya karin tibirin da ke kusa da alama ba za a karɓa ba, ko da yake ana iya karɓar kudin birtaniya da amurka. bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa.",
+    "edits": [
+      {
+        "op": "replace",
+        "from": "akan",
+        "to": "Akan",
+        "index": 0
+      }
+    ],
+    "accepted_by_guard": true,
+    "reason": "ok",
+    "model": "NCAIR1/N-ATLaS"
+  },
+  "env": {
+    "gyara_version": "0.1.0",
+    "installed_from": "git+https://github.com/Baffaabba/gyara@feat/foundation",
+    "git_commit": "f7351d6cda4dc3afecb89fdc3ed48a2b5b5b772e",
+    "gpu": "Tesla T4",
+    "gpu_memory_gb": 15.6,
+    "torch": "2.11.0+cu130",
+    "transformers": "4.57.6",
+    "python": "3.13.15"
+  }
+}

@@ -100,6 +100,100 @@ def _versions() -> dict:
     return out
 
 
+NOT_RECORDED = "not recorded"
+# Run files are written with "\n" on every OS, so a re-score on Windows does
+# not turn every line of a committed report into a diff.
+LF = "\n"
+_FLEURS_ID = re.compile(r"^fleurs_([a-z]{2,3}_[a-z]{2})_(train|validation|test)_")
+
+
+def _test_set_label(manifest_path: str | Path | None, ids: Sequence[str] = ()) -> str:
+    """A human name for the test set, e.g. ``fleurs ha_ng test``.
+
+    Order of evidence: the ``<stem>.summary.json`` that ``fetch-fleurs`` writes
+    next to the manifest; the FLEURS id pattern (``fleurs_ha_ng_test_…``) when
+    every id follows it; otherwise the manifest's folder and file name.
+    """
+    p = Path(manifest_path) if manifest_path else None
+    if p is not None:
+        summ = p.with_name(p.stem + ".summary.json")
+        if summ.exists():
+            try:
+                s = json.loads(summ.read_text(encoding="utf-8"))
+                repo = str(s.get("repo", "")).split("/")[-1]
+                parts = [repo, s.get("config"), s.get("split")]
+                # A summary from a different fetch (other --limit) would mislabel the run.
+                if all(parts) and (not ids or s.get("rows") == len(ids)):
+                    label = " ".join(str(x) for x in parts)
+                    return label + (f" (first {s['limit']})" if s.get("limit") else "")
+            except (ValueError, OSError):
+                pass
+    ms = [_FLEURS_ID.match(str(i)) for i in ids]
+    if ms and all(ms) and len({m.groups() for m in ms}) == 1:
+        return "fleurs " + " ".join(ms[0].groups())
+    if p is not None:
+        parent = p.parent.name
+        return f"{parent} {p.stem}" if parent and parent not in (".", "") else p.stem
+    return "?"
+
+
+def _suggester_meta(sg) -> dict:
+    """What produced the suggestions, so a suggestion effect can be reproduced.
+
+    Duck-typed: anything we cannot read off the object is "not recorded"
+    rather than guessed. The prompt and guard are identified by a hash of their
+    text and thresholds, so a changed prompt shows up as a changed id.
+    """
+    out: dict[str, Any] = {"class": type(sg).__name__}
+    backend = getattr(sg, "backend", None)
+    out["backend"] = backend or NOT_RECORDED
+    out["model_id"] = getattr(sg, "model_id", None) or NOT_RECORDED
+    out["quantisation"] = _quantisation(sg)
+    out["prompt_guard_id"] = _prompt_guard_id() if backend else NOT_RECORDED
+    if backend == "openai":
+        out["base_url"] = getattr(sg, "base_url", None) or NOT_RECORDED
+    for k in ("max_new_tokens", "repetition_penalty"):
+        if hasattr(sg, k):
+            out[k] = getattr(sg, k)
+    return out
+
+
+def _quantisation(sg) -> str:
+    backend = getattr(sg, "backend", None)
+    if backend == "openai":
+        return "set by the server; not visible to Gyara"
+    if backend == "none":
+        return "n/a (suggestions off)"
+    model = getattr(sg, "_model", None)
+    if model is None:
+        want = getattr(sg, "load_in_4bit", None)
+        return (f"{NOT_RECORDED} (model not loaded; 4-bit requested: {want})"
+                if want is not None else NOT_RECORDED)
+    if getattr(model, "is_loaded_in_4bit", False):
+        qc = getattr(getattr(model, "config", None), "quantization_config", None)
+        qt = (qc.get("bnb_4bit_quant_type") if isinstance(qc, dict)
+              else getattr(qc, "bnb_4bit_quant_type", None))
+        return f"4-bit bitsandbytes{f' {qt}' if qt else ''}"
+    if getattr(model, "is_loaded_in_8bit", False):
+        return "8-bit bitsandbytes"
+    dtype = getattr(model, "dtype", None)
+    return f"none ({str(dtype).replace('torch.', '')})" if dtype is not None else NOT_RECORDED
+
+
+def _prompt_guard_id() -> str:
+    """sha256 (first 12 hex) of the proofreading prompt, few-shot examples and guard thresholds."""
+    import hashlib
+
+    from gyara import suggest as sug
+
+    blob = json.dumps({
+        "identity": sug.NATLAS_IDENTITY, "instructions": sug.PROOFREAD_INSTRUCTIONS,
+        "few_shot": sug.FEW_SHOT, "max_word_edit": sug.MAX_WORD_EDIT,
+        "max_changed_word_share": sug.MAX_CHANGED_WORD_SHARE,
+    }, ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:12]
+
+
 # --- Inference --------------------------------------------------------------------
 
 
@@ -175,6 +269,8 @@ def run(
     t0 = time.perf_counter()
     audio_s = 0.0
     n_suggest_err = 0
+    suggest_s = 0.0
+    guard_rejections: dict[str, int] = defaultdict(int)
     with (run_dir / "predictions.jsonl").open("w", encoding="utf-8", newline="\n") as f:
         for row, hyp, lp, flags, dur in _transcribe_rows(transcriber, rows, batch_size):
             audio_s += dur
@@ -184,13 +280,24 @@ def run(
                 "speaker": row.speaker, "source": row.source,
             }
             if suggester is not None:
+                ts = time.perf_counter()
                 try:
-                    rec["hyp_suggested"] = suggester.suggest(hyp).suggested
+                    sg = suggester.suggest(hyp)
+                    rec["hyp_suggested"] = sg.suggested
+                    accepted = getattr(sg, "accepted_by_guard", None)
+                    reason = getattr(sg, "reason", None)
+                    rec["suggest_accepted"] = accepted
+                    rec["suggest_reason"] = reason
+                    if accepted is False:
+                        guard_rejections[str(reason or "unspecified")] += 1
                 except Exception as e:  # noqa: BLE001 - one bad call must not sink the run
                     log.warning("suggester failed on %s: %s", row.id, e)
                     rec["hyp_suggested"] = hyp  # = "suggestion rejected"; counted below
+                    rec["suggest_accepted"] = False
+                    rec["suggest_reason"] = f"error: {type(e).__name__}"
                     rec["flags"] = flags + ["suggest_error"]
                     n_suggest_err += 1
+                suggest_s += time.perf_counter() - ts
             f.write(json.dumps(_clean(rec), ensure_ascii=False) + "\n")
     wall = time.perf_counter() - t0
 
@@ -200,6 +307,7 @@ def run(
         "manifest": str(manifest_path),
         "manifest_sha256": manifest.sha256_file(manifest_path),
         "test_set": manifest_path.stem,
+        "test_set_label": _test_set_label(manifest_path, [r.id for r in rows]),
         "n": len(rows),
         "limit": limit,
         "device": info.get("device", device),
@@ -210,13 +318,19 @@ def run(
         "audio_seconds": round(audio_s, 2),
         # Includes audio loading and, if present, suggestion time.
         "rtf": round(wall / audio_s, 4) if audio_s else None,
+        "rtf_without_suggest": (round((wall - suggest_s) / audio_s, 4)
+                                if audio_s and suggester is not None else None),
         "gyara_version": gyara.__version__,
         "rules_version": normalize.RULES_VERSION,
-        "suggester": type(suggester).__name__ if suggester is not None else None,
+        "suggester": _suggester_meta(suggester) if suggester is not None else None,
         "suggest_errors": n_suggest_err if suggester is not None else None,
+        "suggest_seconds": round(suggest_s, 2) if suggester is not None else None,
+        "suggest_guard_rejections": (
+            {"total": sum(guard_rejections.values()), "by_reason": dict(guard_rejections)}
+            if suggester is not None else None),
         "versions": _versions(),
     }
-    (run_dir / "meta.json").write_text(json.dumps(_clean(meta), indent=2), encoding="utf-8")
+    (run_dir / "meta.json").write_text(json.dumps(_clean(meta), indent=2), encoding="utf-8", newline=LF)
     score_run(run_dir, b=b)
     return run_dir
 
@@ -267,6 +381,126 @@ def _clusters(preds: list[dict]) -> list[str | None]:
     return [p.get("group") or p.get("speaker") for p in preds]
 
 
+def _cluster_keys(preds: list[dict]) -> dict:
+    """Which field each utterance's bootstrap cluster actually came from."""
+    by_group = sum(1 for p in preds if p.get("group"))
+    by_speaker = sum(1 for p in preds if not p.get("group") and p.get("speaker"))
+    solo = len(preds) - by_group - by_speaker
+    used = [k for k, v in (("group", by_group), ("speaker", by_speaker)) if v]
+    return {"group": by_group, "speaker": by_speaker, "own_cluster": solo,
+            "unit": "+".join(used) if used else "utterance"}
+
+
+def _cluster_text(ck: dict, preds: list[dict]) -> str:
+    """Plain-English description of the cluster key, naming only what was used."""
+    fleurs = all((p.get("source") or "") == "fleurs" for p in preds)
+    names = {"group": "`group` (FLEURS sentence id)" if fleurs else "`group`",
+             "speaker": "`speaker`"}
+    parts = [f"{names[k]} for {ck[k]} utterances" for k in ("group", "speaker") if ck[k]]
+    if ck["own_cluster"]:
+        parts.append(f"{ck['own_cluster']} utterances with neither, each its own cluster")
+    if not ck["group"] and not ck["speaker"]:
+        return "utterances (no `group` or `speaker` in the manifest), resampled independently"
+    return "; ".join(parts)
+
+
+# Hooked letters as they appear after ``standard`` normalisation (ƴ is canonicalised to 'y).
+_HOOKS = ("ɓ", "ɗ", "ƙ", "'y")
+
+
+def _has_hook(w: str) -> bool:
+    return any(h in w for h in _HOOKS)
+
+
+def _hook_split(cs_standard: metrics.CorpusScore) -> dict:
+    """Word substitutions (standard) that differ only in hooked letters, by direction.
+
+    ``hyp_hooked_ref_plain``: the transcript has a hook where the reference has
+    none (e.g. ref *daya*, hyp *ɗaya*). ``ref_hooked_hyp_plain``: the reverse.
+    ``both_hooked``: both carry hooks, in different places. Who is "right" is
+    not decided here: references can be missing hooks too.
+    """
+    lenient = normalize.get_normalizer("lenient")
+    out = {"hook_only_substitutions": 0, "hyp_hooked_ref_plain": 0,
+           "ref_hooked_hyp_plain": 0, "both_hooked": 0}
+    for (op, r, h), k in cs_standard.confusions.items():
+        if op != "S" or r == h or lenient(r) != lenient(h):
+            continue
+        out["hook_only_substitutions"] += k
+        hr, hh = _has_hook(r), _has_hook(h)
+        key = ("hyp_hooked_ref_plain" if hh and not hr else
+               "ref_hooked_hyp_plain" if hr and not hh else "both_hooked")
+        out[key] += k
+    ref_w = [w for u in cs_standard.utterances for w in u.ref.split()]
+    hyp_w = [w for u in cs_standard.utterances for w in u.hyp.split()]
+    out["ref_words_with_hook_share"] = (sum(map(_has_hook, ref_w)) / len(ref_w)) if ref_w else None
+    out["hyp_words_with_hook_share"] = (sum(map(_has_hook, hyp_w)) / len(hyp_w)) if hyp_w else None
+    return out
+
+
+_PUNCT_KEEP = set("'’ʼ‘")  # apostrophes are part of Hausa spelling ('yan, ƙur'ani)
+
+
+def _case_punct_fold(s: str) -> str:
+    """Casefold and drop punctuation (apostrophes kept), for "changed beyond case/punctuation"."""
+    import unicodedata
+
+    s = unicodedata.normalize("NFC", s or "").casefold()
+    s = "".join(" " if unicodedata.category(c).startswith("P") and c not in _PUNCT_KEEP else c
+                for c in s)
+    return " ".join(s.split())
+
+
+def _suggestion_counts(preds: list[dict]) -> dict:
+    """How many utterances the suggestions touched, and how deeply."""
+    std = normalize.get_normalizer("standard")
+    n_any = n_beyond = n_std = 0
+    for p in preds:
+        h, s = p.get("hyp") or "", p.get("hyp_suggested", p.get("hyp")) or ""
+        if s == h:
+            continue
+        n_any += 1
+        if _case_punct_fold(s) != _case_punct_fold(h):
+            n_beyond += 1
+        if std(s) != std(h):
+            n_std += 1
+    out: dict[str, Any] = {
+        "utterances": len(preds),
+        "changed_any": n_any,
+        "changed_beyond_case_punctuation": n_beyond,
+        "changed_after_standard_normalisation": n_std,
+    }
+    if any("suggest_accepted" in p for p in preds):
+        rej: dict[str, int] = defaultdict(int)
+        for p in preds:
+            if p.get("suggest_accepted") is False:
+                rej[str(p.get("suggest_reason") or "unspecified")] += 1
+        out["guard_rejections"] = {"total": sum(rej.values()), "by_reason": dict(rej)}
+    else:
+        out["guard_rejections"] = NOT_RECORDED
+    return out
+
+
+def _upgrade_meta(meta: dict, preds: list[dict]) -> dict:
+    """Bring meta.json from older runs up to the current fields, without guessing.
+
+    Anything the old run did not write down becomes "not recorded".
+    """
+    if "test_set_label" not in meta:
+        meta["test_set_label"] = _test_set_label(meta.get("manifest"), [p["id"] for p in preds])
+    if any("hyp_suggested" in p for p in preds):
+        sg = meta.get("suggester")
+        if not isinstance(sg, dict):
+            meta["suggester"] = {
+                "class": sg if isinstance(sg, str) else NOT_RECORDED,
+                "backend": NOT_RECORDED, "model_id": NOT_RECORDED,
+                "quantisation": NOT_RECORDED, "prompt_guard_id": NOT_RECORDED,
+            }
+        for k in ("suggest_seconds", "suggest_guard_rejections", "rtf_without_suggest"):
+            meta.setdefault(k, NOT_RECORDED)
+    return meta
+
+
 def score_run(run_dir: str | Path, b: int = stats.DEFAULT_B) -> dict:
     """Score ``predictions.jsonl`` (no inference). Writes metrics.json + report.md."""
     run_dir = Path(run_dir)
@@ -276,8 +510,17 @@ def score_run(run_dir: str | Path, b: int = stats.DEFAULT_B) -> dict:
     if meta.get("rules_version") and meta["rules_version"] != normalize.RULES_VERSION:
         log.warning("predictions made under rules %s, re-scored under %s",
                     meta["rules_version"], normalize.RULES_VERSION)
+    if meta_path.exists():
+        # Old runs lack newer fields. Add them as "not recorded" (never
+        # overwriting what the run did record) so meta.json says so itself.
+        before = json.dumps(meta, sort_keys=True)
+        meta = _upgrade_meta(meta, preds)
+        if json.dumps(meta, sort_keys=True) != before:
+            meta_path.write_text(json.dumps(_clean(meta), indent=2, ensure_ascii=False),
+                                 encoding="utf-8", newline=LF)
     meta["scored_rules_version"] = normalize.RULES_VERSION
     meta["rules_version"] = normalize.RULES_VERSION  # scoring, not decoding, applies the rules
+    meta = _upgrade_meta(meta, preds)
 
     ids = [p["id"] for p in preds]
     refs = [p.get("ref") or "" for p in preds]
@@ -311,9 +554,15 @@ def score_run(run_dir: str | Path, b: int = stats.DEFAULT_B) -> dict:
             pc = stats.paired_bootstrap(
                 [u.chars.errors for u in cs_s.utterances], [u.chars.errors for u in cs.utterances],
                 clens, groups, b=b)
+            # Per-utterance direction under this mode's WER: the pooled delta
+            # hides that accepting everything makes some clips worse.
+            per = [(s.words.errors, a.words.errors) for s, a in zip(cs_s.utterances, cs.utterances)]
             block["suggestion_effect"] = {
                 "wer": pw.to_dict(), "cer": pc.to_dict(),
                 "changed_utterances": sum(1 for p in preds if p.get("hyp_suggested", p["hyp"]) != p["hyp"]),
+                "wer_improved_utterances": sum(1 for s, a in per if s < a),
+                "wer_worsened_utterances": sum(1 for s, a in per if s > a),
+                "wer_unchanged_utterances": sum(1 for s, a in per if s == a),
                 "_pw": pw, "_pc": pc,
             }
         modes[mode] = block
@@ -332,20 +581,26 @@ def score_run(run_dir: str | Path, b: int = stats.DEFAULT_B) -> dict:
             flag_counts[fl] += 1
 
     n_clusters = len({g if g is not None else f"__solo_{i}" for i, g in enumerate(groups)})
+    ck = _cluster_keys(preds)
+    gap = modes["standard"]["_wer"].estimate - modes["lenient"]["_wer"].estimate
     result = {
         "meta": meta,
         "n": {
             "utterances": len(preds),
             "clusters": n_clusters,
-            "cluster_unit": "group/speaker" if any(g is not None for g in groups) else "utterance",
+            "cluster_unit": ck["unit"],
+            "cluster_keys": ck,
+            "cluster_description": _cluster_text(ck, preds),
             "hours": round(sum(p.get("duration") or 0 for p in preds) / 3600, 4),
             "ref_words_standard": modes["standard"]["ref_words"],
             "bootstrap_resamples": b,
         },
         "modes": modes,
-        "hook_error_share_points": (
-            (modes["standard"]["_wer"].estimate - modes["lenient"]["_wer"].estimate)
-        ),
+        # Standard minus lenient WER. Not "the model's hook errors": the
+        # reference can be the side missing the hook. See hook_substitutions.
+        "standard_minus_lenient_wer": gap,  # a fraction, like every rate here
+        "hook_substitutions": _hook_split(scores["standard"]),
+        "suggestions": _suggestion_counts(preds) if has_sugg else None,
         "confidence": {
             "spearman_avg_logprob_vs_wer": rho, "n": len(lp),
             "note": "negative rho means lower confidence goes with more errors (what we want)",
@@ -353,9 +608,9 @@ def score_run(run_dir: str | Path, b: int = stats.DEFAULT_B) -> dict:
         "flags": dict(flag_counts),
         "loop_flagged": flag_counts.get("loop", 0),
     }
-    (run_dir / "report.md").write_text(_report_md(result, modes), encoding="utf-8")
+    (run_dir / "report.md").write_text(_report_md(result, modes), encoding="utf-8", newline=LF)
     clean = _clean(_strip_private(result))
-    (run_dir / "metrics.json").write_text(json.dumps(clean, indent=2, ensure_ascii=False), encoding="utf-8")
+    (run_dir / "metrics.json").write_text(json.dumps(clean, indent=2, ensure_ascii=False), encoding="utf-8", newline=LF)
     return clean
 
 
@@ -380,10 +635,91 @@ def _breakdown_table(bd: dict, title: str) -> str:
         [title, "utterances", "ref words", "WER % [95% CI]", "CER % [95% CI]"], rows) + "\n"
 
 
+def _p_cell(r: stats.PairedResult) -> str:
+    """p for a table column headed "p": ``0.0016`` or ``< 0.001``."""
+    s = r.p_str()
+    return s[4:] if s.startswith("p = ") else s[2:] if s.startswith("p ") else s
+
+
+def _hook_lines(res: dict) -> list[str]:
+    gap = res.get("standard_minus_lenient_wer")
+    if gap is None or math.isnan(gap):
+        return []
+    hs = res.get("hook_substitutions") or {}
+    out = ["", f"Standard minus lenient WER = **{gap * 100:.2f} points**. This is how much of the "
+               "error rate disappears when hooked letters (ɓ ɗ ƙ 'y) are folded. It measures "
+               "disagreement between transcript and reference; it does not say which side is wrong."]
+    if hs.get("hook_only_substitutions"):
+        share = lambda x: "n/a" if x is None else f"{x * 100:.1f}%"  # noqa: E731
+        out += ["", f"Of the word substitutions under `standard`, {hs['hook_only_substitutions']} "
+                    "differ only in hooked letters:", "",
+                _table(["direction", "substitutions"], [
+                    ("hook in the transcript, not in the reference", hs["hyp_hooked_ref_plain"]),
+                    ("hook in the reference, not in the transcript", hs["ref_hooked_hyp_plain"]),
+                    ("hooks on both sides, in different places", hs["both_hooked"]),
+                ]), "",
+                f"Words carrying a hook: {share(hs.get('ref_words_with_hook_share'))} of reference "
+                f"words, {share(hs.get('hyp_words_with_hook_share'))} of transcript words."]
+    return out
+
+
+def _suggestion_lines(res: dict, modes: dict) -> list[str]:
+    std, n, meta = modes["standard"], res["n"], res["meta"]
+    out = ["", "## Suggestion effect: every suggestion accepted without review, vs ASR alone", ""]
+    sg = meta.get("suggester")
+    if isinstance(sg, dict):
+        secs = meta.get("suggest_seconds")
+        secs = f"{secs} s" if isinstance(secs, (int, float)) else str(secs)
+        mid = sg.get("model_id")
+        mid = mid if mid == NOT_RECORDED else f"`{mid}`"
+        out += [f"- Suggester: {mid}, backend {sg.get('backend')}, "
+                f"quantisation {sg.get('quantisation')}, prompt/guard id {sg.get('prompt_guard_id')}.",
+                f"- Time spent on suggestions: {secs}. Real-time factor without them: "
+                f"{meta.get('rtf_without_suggest')}.", ""]
+    rows = []
+    for m in modes:
+        se = modes[m].get("suggestion_effect")
+        if not se:
+            continue
+        pw: stats.PairedResult = se["_pw"]
+        rows.append((m, _pct(pw.rate_b), _pct(pw.rate_a), f"{pw.delta * 100:+.2f}",
+                     f"[{pw.low * 100:+.2f}, {pw.high * 100:+.2f}]", _p_cell(pw),
+                     f"{pw.mde * 100:.2f}", se["wer_improved_utterances"],
+                     se["wer_worsened_utterances"], se["wer_unchanged_utterances"]))
+    out.append(_table(["mode", "ASR WER %", "with suggestions WER %", "Δ points", "95% CI", "p",
+                       "MDE", "clips better", "clips worse", "clips same"], rows))
+    se = std["suggestion_effect"]
+    out += ["", "Standard WER: " + se["_pw"].sentence("With suggestions", "ASR alone"),
+            "", "Standard CER: " + se["_pc"].sentence("With suggestions", "ASR alone")]
+    sc = res.get("suggestions") or {}
+    if sc:
+        out += ["", f"The suggestions changed the text of {sc['changed_any']} of {sc['utterances']} "
+                    f"utterances. {sc['changed_beyond_case_punctuation']} of those changed more than "
+                    "capitals and punctuation, and "
+                    f"{sc['changed_after_standard_normalisation']} still differ after `standard` "
+                    "normalisation."]
+        gr = sc.get("guard_rejections")
+        if isinstance(gr, dict):
+            reasons = ", ".join(f"{k}: {v}" for k, v in sorted(gr["by_reason"].items(),
+                                                              key=lambda kv: -kv[1]))
+            out += ["", f"The guard rejected {gr['total']} of {sc['utterances']} suggestions"
+                        + (f" ({reasons})." if reasons else ".")]
+        else:
+            out += ["", f"Guard rejections: {gr} for this run."]
+    out += ["", f"Under standard WER, accepting every suggestion made "
+                f"{se['wer_improved_utterances']} utterance{'' if se['wer_improved_utterances'] == 1 else 's'} better, "
+                f"{se['wer_worsened_utterances']} worse and {se['wer_unchanged_utterances']} no "
+                "different. This is not an upper bound: a reviewer who rejects the harmful "
+                "suggestions does better than accepting them all. In the product, a human accepts "
+                "or rejects each one."]
+    return out
+
+
 def _report_md(res: dict, modes: dict) -> str:
     meta, n = res["meta"], res["n"]
     std = modes["standard"]
-    out = [f"# Gyara evaluation: `{meta.get('model_id', '?')}` on `{meta.get('test_set', '?')}`", ""]
+    label = meta.get("test_set_label") or meta.get("test_set", "?")
+    out = [f"# Gyara evaluation: `{meta.get('model_id', '?')}` on {label}", ""]
     out.append(
         f"- **n** = {n['utterances']} utterances, {n['clusters']} clusters "
         f"({n['cluster_unit']}), {std['ref_words']} reference words (standard), "
@@ -401,8 +737,8 @@ def _report_md(res: dict, modes: dict) -> str:
             f"run started {meta.get('started_utc')}"
         )
     out.append(
-        f"- 95% CIs: cluster bootstrap, {n['bootstrap_resamples']} resamples "
-        f"(clusters = sentence id / speaker, so correlated readings are not counted as independent)."
+        f"- 95% CIs: cluster bootstrap, {n['bootstrap_resamples']} resamples. Clusters: "
+        f"{n['cluster_description']}."
     )
     out += ["", "## Headline", "",
             "`standard` is the headline. `raw` only collapses whitespace; `lenient` also folds hooked letters.", ""]
@@ -411,10 +747,7 @@ def _report_md(res: dict, modes: dict) -> str:
         [(m, _fmt_ci(modes[m]["_wer"]), _fmt_ci(modes[m]["_cer"]), modes[m]["substitutions"],
           modes[m]["deletions"], modes[m]["insertions"], modes[m]["ref_words"]) for m in modes],
     ))
-    hook = res["hook_error_share_points"]
-    if hook is not None and not math.isnan(hook):
-        out += ["", f"Standard minus lenient WER = **{hook * 100:.2f} points**: the part of the "
-                    "error rate that is hooked-letter (ɓ ɗ ƙ ƴ) mistakes only."]
+    out += _hook_lines(res)
 
     out += ["", "## Where it fails (standard)", ""]
     for key, title in (("duration", "clip length"), ("source", "source"),
@@ -455,24 +788,7 @@ def _report_md(res: dict, modes: dict) -> str:
                f"({res['loop_flagged']} utterance(s)).")
 
     if "suggestion_effect" in std:
-        out += ["", "## Suggestion effect (accepting every suggestion vs ASR alone)", ""]
-        rows = []
-        for m in modes:
-            se = modes[m].get("suggestion_effect")
-            if not se:
-                continue
-            pw: stats.PairedResult = se["_pw"]
-            rows.append((m, _pct(pw.rate_b), _pct(pw.rate_a), f"{pw.delta * 100:+.2f}",
-                         f"[{pw.low * 100:+.2f}, {pw.high * 100:+.2f}]", f"{pw.p_value:.4f}",
-                         f"{pw.mde * 100:.2f}"))
-        out.append(_table(["mode", "ASR WER %", "with suggestions WER %", "Δ points",
-                           "95% CI", "p", "MDE"], rows))
-        se = std["suggestion_effect"]
-        out += ["", "Standard WER: " + se["_pw"].sentence("With suggestions", "ASR alone"),
-                "", "Standard CER: " + se["_pc"].sentence("With suggestions", "ASR alone"),
-                "", f"Suggestions changed {se['changed_utterances']} of {n['utterances']} utterances. "
-                "In the product, a human accepts or rejects each one; this measures the upper "
-                "bound where every suggestion is accepted."]
+        out += _suggestion_lines(res, modes)
     out += ["", "---", "", f"*{gyara.ATTRIBUTION}*", ""]
     return "\n".join(out)
 
@@ -498,6 +814,20 @@ def _run_label(run_dir: Path) -> str:
     return run_dir.name
 
 
+def _paired(pa: dict, pb: dict, common: list[str], mode: str, groups: list, b: int):
+    norm = normalize.get_normalizer(mode)
+    refs = [pa[i].get("ref") or "" for i in common]
+    sa = metrics.score_corpus(common, refs, [pa[i].get("hyp") or "" for i in common], norm, groups)
+    sb = metrics.score_corpus(common, refs, [pb[i].get("hyp") or "" for i in common], norm, groups)
+    pw = stats.paired_bootstrap([u.words.errors for u in sa.utterances],
+                                [u.words.errors for u in sb.utterances],
+                                [u.words.ref_len for u in sa.utterances], groups, b=b)
+    pc = stats.paired_bootstrap([u.chars.errors for u in sa.utterances],
+                                [u.chars.errors for u in sb.utterances],
+                                [u.chars.ref_len for u in sa.utterances], groups, b=b)
+    return pw, pc
+
+
 def compare(run_a: str | Path, run_b: str | Path, mode: str = "standard",
             out: str | Path | None = None, b: int = stats.DEFAULT_B) -> dict:
     """Paired bootstrap of run A vs run B on the utterances both contain.
@@ -505,12 +835,18 @@ def compare(run_a: str | Path, run_b: str | Path, mode: str = "standard",
     Negative delta means A makes fewer errors. Refuses runs scored under
     different normalisation rules, or whose references disagree, because
     then the comparison is not like for like.
+
+    All three modes × WER/CER are tested (six tests) and reported; ``mode`` is
+    the headline, fixed before looking, and fills the top-level ``wer``/``cer``
+    and sentences.
     """
     run_a, run_b = Path(run_a), Path(run_b)
     ra, rb = _run_rules(run_a), _run_rules(run_b)
     if ra != rb:
         raise ValueError(f"runs use different normalisation rules ({ra} vs {rb}); re-score both "
                          "with `score_run` under the same RULES_VERSION first")
+    if mode not in normalize.MODES:
+        raise ValueError(f"unknown mode {mode!r}; choose from {normalize.MODES}")
     pa = {p["id"]: p for p in _read_jsonl(run_a / "predictions.jsonl")}
     pb = {p["id"]: p for p in _read_jsonl(run_b / "predictions.jsonl")}
     common = [i for i in pa if i in pb]
@@ -520,48 +856,59 @@ def compare(run_a: str | Path, run_b: str | Path, mode: str = "standard",
     bad = [i for i in common if norm(pa[i].get("ref")) != norm(pb[i].get("ref"))]
     if bad:
         raise ValueError(f"{len(bad)} shared id(s) have different references, e.g. {bad[:3]}")
-    refs = [pa[i].get("ref") or "" for i in common]
     groups = [pa[i].get("group") or pa[i].get("speaker") for i in common]
-    sa = metrics.score_corpus(common, refs, [pa[i].get("hyp") or "" for i in common], norm, groups)
-    sb = metrics.score_corpus(common, refs, [pb[i].get("hyp") or "" for i in common], norm, groups)
-    pw = stats.paired_bootstrap([u.words.errors for u in sa.utterances],
-                                [u.words.errors for u in sb.utterances],
-                                [u.words.ref_len for u in sa.utterances], groups, b=b)
-    pc = stats.paired_bootstrap([u.chars.errors for u in sa.utterances],
-                                [u.chars.errors for u in sb.utterances],
-                                [u.chars.ref_len for u in sa.utterances], groups, b=b)
+    ck = _cluster_keys([pa[i] for i in common])
+    by_mode = {m: _paired(pa, pb, common, m, groups, b) for m in normalize.MODES}
+    pw, pc = by_mode[mode]
     la, lb = _run_label(run_a), _run_label(run_b)
     if la == lb:
         la, lb = run_a.name, run_b.name
     res = {
-        "run_a": str(run_a), "run_b": str(run_b), "label_a": la, "label_b": lb, "mode": mode,
+        "run_a": run_a.as_posix(), "run_b": run_b.as_posix(), "label_a": la, "label_b": lb, "mode": mode,
+        "headline": f"{mode} WER", "n_tests": 2 * len(by_mode),
         "rules_version": ra, "n_common": len(common),
         "dropped_a": len(pa) - len(common), "dropped_b": len(pb) - len(common),
+        "cluster_keys": ck,
         "wer": pw.to_dict(), "cer": pc.to_dict(),
         "sentence_wer": pw.sentence(la, lb), "sentence_cer": pc.sentence(la, lb),
+        "modes": {m: {"wer": w.to_dict(), "cer": c.to_dict()} for m, (w, c) in by_mode.items()},
     }
-    md = [f"# Compare: `{la}` (A) vs `{lb}` (B), {mode} normalisation", "",
+    rows = []
+    for m, (w, c) in by_mode.items():
+        for name, r in (("WER", w), ("CER", c)):
+            head = m == mode and name == "WER"
+            cell = f"**{m}**" if head else m
+            rows.append((cell, name, _pct(r.rate_a), _pct(r.rate_b), f"{r.delta * 100:+.2f}",
+                         f"[{r.low * 100:+.2f}, {r.high * 100:+.2f}]", _p_cell(r),
+                         f"{r.mde * 100:.2f}"))
+    md = [f"# Compare: `{la}` (A) vs `{lb}` (B)", "",
           f"- Same {len(common)} utterances, same references, rules {ra}. "
           f"Dropped (not in both runs): {res['dropped_a']} from A, {res['dropped_b']} from B.",
-          f"- Paired cluster bootstrap, {pw.resamples} resamples over {pw.n_units} {pw.unit}s. "
-          "Δ = A − B; negative means A makes fewer errors.", "",
-          _table(["metric", "A %", "B %", "Δ points", "95% CI", "p", "MDE (points)"],
-                 [(name, _pct(r.rate_a), _pct(r.rate_b), f"{r.delta * 100:+.2f}",
-                   f"[{r.low * 100:+.2f}, {r.high * 100:+.2f}]", f"{r.p_value:.4f}",
-                   f"{r.mde * 100:.2f}") for name, r in (("WER", pw), ("CER", pc))]),
-          "", f"**WER:** {res['sentence_wer']}", "", f"**CER:** {res['sentence_cer']}",
+          f"- Paired cluster bootstrap, {pw.resamples} resamples over {pw.n_units} {pw.unit}s "
+          f"({_cluster_text(ck, [pa[i] for i in common])}). "
+          "Δ = A − B; negative means A makes fewer errors.",
+          f"- Headline, fixed in advance: **{mode} WER**. The table shows all "
+          f"{res['n_tests']} tests (3 normalisation modes × WER/CER); read the others as "
+          "supporting evidence, not as extra chances to find a difference.", "",
+          _table(["mode", "metric", "A %", "B %", "Δ points", "95% CI", "p", "MDE (points)"], rows),
+          "", f"**WER ({mode}):** {res['sentence_wer']}", "",
+          f"**CER ({mode}):** {res['sentence_cer']}",
           "", "---", "", f"*{gyara.ATTRIBUTION}*", ""]
     out_path = Path(out) if out else run_a / "compare.md"
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(md), encoding="utf-8")
+    out_path.write_text("\n".join(md), encoding="utf-8", newline=LF)
     # The machine-readable twin: every published comparison number must come
     # from a committed file, not from the markdown or a console print.
     json_path = out_path.with_suffix(".json")
-    res["path"] = str(out_path)
-    res["json_path"] = str(json_path)
+    res["path"] = out_path.as_posix()
+    res["json_path"] = json_path.as_posix()
     res = _clean(res)
-    json_path.write_text(json.dumps(res, indent=2, ensure_ascii=False), encoding="utf-8")
+    json_path.write_text(json.dumps(res, indent=2, ensure_ascii=False), encoding="utf-8", newline=LF)
     return res
+
+
+def _iv(d: dict) -> stats.Interval:
+    return stats.Interval(**{k: (float("nan") if v is None else v) for k, v in d.items()})
 
 
 def leaderboard(run_dirs: Iterable[str | Path]) -> str:
@@ -574,13 +921,16 @@ def leaderboard(run_dirs: Iterable[str | Path]) -> str:
             continue
         m = json.loads(p.read_text(encoding="utf-8"))
         meta, std, len_ = m.get("meta", {}), m["modes"]["standard"], m["modes"]["lenient"]
-        iv = stats.Interval(**{k: (float("nan") if v is None else v) for k, v in std["wer"].items()})
+        model = meta.get("model_id", Path(d).name)
+        if meta.get("suggester"):
+            # WER is the speech model alone; RTF includes suggestion time.
+            model += " (run with suggestions; WER is ASR alone)"
+        label = meta.get("test_set_label") or meta.get("test_set", "?")
         entries.append((
             std["wer"]["estimate"] if std["wer"]["estimate"] is not None else float("inf"),
-            (meta.get("model_id", Path(d).name), meta.get("test_set", "?"), m["n"]["utterances"],
-             _fmt_ci(iv), _pct(std["cer"]["estimate"]), _pct(len_["wer"]["estimate"]),
-             meta.get("rtf", "n/a"), meta.get("rules_version", "?")),
+            (model, label, m["n"]["utterances"], _fmt_ci(_iv(std["wer"])), _fmt_ci(_iv(std["cer"])),
+             _pct(len_["wer"]["estimate"]), meta.get("rtf", "n/a"), meta.get("rules_version", "?")),
         ))
     entries.sort(key=lambda e: e[0])
-    return _table(["model", "test set", "n", "WER std % [95% CI]", "CER std %", "WER lenient %",
-                   "RTF", "rules"], [e[1] for e in entries])
+    return _table(["model", "test set", "n", "WER std % [95% CI]", "CER std % [95% CI]",
+                   "WER lenient %", "RTF", "rules"], [e[1] for e in entries])

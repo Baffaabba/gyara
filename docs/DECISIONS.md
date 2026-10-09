@@ -28,6 +28,18 @@ proposed again.
 
 ## 2026-10-09
 
+- **FLEURS headline stays standard WER (30.19%), with lenient (27.33%) shown
+  beside it and the reason.** *Why:* gyara-stats found the FLEURS references
+  often omit hooked letters the model writes; Baffa kept the rule fixed
+  before results rather than switch to the nicer number after seeing them.
+  *Applies to:* README, BENCHMARK.md, N-ATLAS-INTEGRATION.md, video, pitch.
+
+- **Commit per-utterance predictions for runs on public FLEURS data; own-audio
+  predictions stay out of git.** *Why:* lets anyone re-score our numbers
+  (FLEURS is CC-BY-4.0); own audio may carry consent limits.
+  *Applies to:* gyara-ml (run naming: FLEURS runs live in `runs/*fleurs*/`,
+  `runs/dev/` or `runs/probe/`), whoever commits runs.
+
 - **The demo Space is public, at `huggingface.co/spaces/Baffaabba/gyara`.**
   *Why:* Baffa chose public over private so testers need no HF account. The
   Space warns that uploads are shared.

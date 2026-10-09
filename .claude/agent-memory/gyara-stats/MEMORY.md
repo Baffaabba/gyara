@@ -1,0 +1,1 @@
+- [FLEURS benchmark findings](project_fleurs_benchmark_findings.md) — 2026-10-09 review: FLEURS refs omit hooks, N-ATLaS −0.18 anatomy, blocked wordings

@@ -1,0 +1,43 @@
+{
+  "model_id": "NCAIR1/Hausa-ASR",
+  "manifest": "data\\fleurs\\probe-dev\\validation.jsonl",
+  "manifest_sha256": "4d545a27ef13518aacda2156fd735243c0ffe77b886872006b34653060014aa1",
+  "test_set": "validation",
+  "test_set_label": "fleurs ha_ng validation (first 100)",
+  "n": 100,
+  "limit": null,
+  "device": "cpu",
+  "language": "hausa",
+  "decoding": {
+    "model_id": "NCAIR1/Hausa-ASR",
+    "device": "cpu",
+    "dtype": "float32",
+    "language": "hausa",
+    "language_used": "hausa",
+    "task": "transcribe",
+    "num_beams": 1,
+    "batch_size": 8,
+    "fallback_temperatures": [
+      0.2,
+      0.4,
+      0.6
+    ],
+    "no_repeat_ngram_size_on_retry": 4
+  },
+  "started_utc": "2026-10-09T13:21:55+00:00",
+  "wall_seconds": 1358.1,
+  "audio_seconds": 1775.1,
+  "rtf": 0.7651,
+  "rtf_without_suggest": null,
+  "gyara_version": "0.1.0",
+  "rules_version": "1.0.0",
+  "suggester": null,
+  "suggest_errors": null,
+  "suggest_seconds": null,
+  "suggest_guard_rejections": null,
+  "versions": {
+    "python": "3.11.0",
+    "torch": "2.14.1+cpu",
+    "transformers": "4.57.6"
+  }
+}
