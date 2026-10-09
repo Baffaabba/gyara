@@ -86,13 +86,25 @@ If you only want one part:
 | FLEURS download and fine-tuning | `pip install -e ".[train]"` |
 | Run the tests | add `dev`, e.g. `pip install -e ".[all,dev]"` |
 
-The N-ATLAS models are gated. Open
-[`NCAIR1/Hausa-ASR`](https://huggingface.co/NCAIR1/Hausa-ASR) and
-[`NCAIR1/N-ATLaS`](https://huggingface.co/NCAIR1/N-ATLaS), accept the licence,
-then give Gyara a token. Make one at
-[huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
-A **read** token is enough to use the models; you need a **write** token only
-to deploy the Space. Then do one of these:
+### Get access to the N-ATLAS models (once per person)
+
+Both models are gated: Hugging Face won't let you download them until you
+accept their licence. Do this before anything else, with your own account.
+
+1. Sign in at [huggingface.co](https://huggingface.co) (make a free account
+   if you need one).
+2. Open [`NCAIR1/Hausa-ASR`](https://huggingface.co/NCAIR1/Hausa-ASR), the
+   speech-to-text model. Fill in the form at the top and click to agree.
+3. Open [`NCAIR1/N-ATLaS`](https://huggingface.co/NCAIR1/N-ATLaS), the
+   language model that suggests spelling fixes. Do the same.
+4. Reload each page. It should say you have been granted access. If it says
+   your request is pending, wait for the approval email.
+5. Make a token at
+   [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
+   A **read** token is enough to use the models. You need a **write** token
+   only to deploy the Space.
+
+Then give Gyara the token in one of these ways:
 
 1. **A `.env` file (simplest, works in every shell).** Create a file called
    `.env` in the repo folder with one line:
@@ -132,7 +144,18 @@ and you can still correct and export earlier work.
 No GPU? Transcription runs on a laptop CPU, slowly. For N-ATLaS suggestions
 without a GPU, serve a GGUF build (for example `tosinamuda/N-ATLaS-GGUF`) with
 `llama-server` and pass `--suggest openai --llm-url http://localhost:8080`.
-Free Colab / Kaggle notebooks are in [notebooks/](notebooks/).
+### The Colab notebooks (no GPU needed on your side)
+
+| Notebook | What it does | Run it when |
+| --- | --- | --- |
+| [`benchmark_colab.ipynb`](notebooks/benchmark_colab.ipynb) | Measures how accurate the models are on FLEURS, the public Hausa test set. Hausa-ASR alone, then whisper-small for comparison, then Hausa-ASR with N-ATLaS spelling fixes. Writes the error rates with confidence intervals to `runs/`. About 2 to 2.5 hours on a free T4. | First. These are the numbers in the README and the submission. |
+| [`finetune_colab.ipynb`](notebooks/finetune_colab.ipynb) | Retrains Hausa-ASR on corrected transcripts exported from the app, then checks honestly on held-out audio whether the retrained model is better. | After people have corrected recordings in the app and exported a dataset. |
+
+To run one: open it in Colab, choose **Runtime → Change runtime type → T4
+GPU**, add your token under **Secrets** (the key icon) as `HF_TOKEN` with
+notebook access on, then **Runtime → Run all**. Each notebook downloads a
+zip of its results as it goes. Unzip it in the repo folder so the files land
+in `runs/`.
 
 ## Use it
 
