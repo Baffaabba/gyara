@@ -49,6 +49,22 @@ To activate the venv on Windows, use one of these instead of
 If PowerShell refuses to run the script, run
 `Set-ExecutionPolicy -Scope Process Bypass` first, then activate again.
 
+**Windows and WSL don't mix.** A venv made in Windows has a `Scripts` folder
+and only works from Windows shells. A venv made in WSL (Ubuntu) has a `bin`
+folder and only works from WSL. Don't paste a Windows path such as
+`E:\Repos\gyara\.venv\Scripts\activate` into a WSL terminal: bash drops the
+backslashes and says `command not found`. Pick one side and stay on it:
+
+| You are in | Make and activate the venv with |
+| --- | --- |
+| PowerShell or Command Prompt | `python -m venv .venv` then `.venv\Scripts\activate` |
+| Git Bash | `python -m venv .venv` then `source .venv/Scripts/activate` |
+| WSL (Ubuntu) | `python3 -m venv .venv-wsl` then `source .venv-wsl/bin/activate` |
+
+Use a different folder name in WSL (`.venv-wsl`), so it can't clash with a
+Windows `.venv` in the same checkout. In WSL the repo is under `/mnt/e/...`
+when it lives on the `E:` drive.
+
 `.[all]` installs everything: the speech model, the correction app, dataset
 export and fine-tuning. **Expect 10 to 30 minutes.** On Windows and macOS it
 downloads about 1 GB. On Linux, pip fetches the CUDA build of PyTorch, which is
@@ -73,11 +89,42 @@ If you only want one part:
 The N-ATLAS models are gated. Open
 [`NCAIR1/Hausa-ASR`](https://huggingface.co/NCAIR1/Hausa-ASR) and
 [`NCAIR1/N-ATLaS`](https://huggingface.co/NCAIR1/N-ATLaS), accept the licence,
-then log in once:
+then give Gyara a token. Make one at
+[huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
+A **read** token is enough to use the models; you need a **write** token only
+to deploy the Space. Then do one of these:
+
+1. **A `.env` file (simplest, works in every shell).** Create a file called
+   `.env` in the repo folder with one line:
+
+   ```
+   HF_TOKEN=hf_your_token_here
+   ```
+
+   `gyara` and `python app.py` read it on start-up. It is in `.gitignore`, so
+   it never gets committed. A variable already set in your shell wins over it.
+2. **`hf auth login`.** It asks for the token and saves it for your user
+   account. Answer `N` to "Add token as git credential?" unless you plan to
+   push to the Hub with git.
+3. **An environment variable:** `export HF_TOKEN=hf_...` (macOS, Linux, WSL,
+   Git Bash) or `$env:HF_TOKEN="hf_..."` (PowerShell). It lasts only for that
+   terminal.
+
+`hf auth login` saves the token per environment. A login in WSL is stored in
+WSL's home folder, and Windows can't see it, and the other way round. If you
+logged in on one side and run `gyara` on the other, use the `.env` file.
+
+Never paste a token into an issue, a commit or a chat. If one leaks, delete it
+on the tokens page and make a new one.
+
+To check that it works:
 
 ```bash
-hf auth login                    # or set the HF_TOKEN environment variable
+gyara transcribe some-short-clip.wav --out clip.srt
 ```
+
+If access is missing, Gyara says so in three lines within a few seconds and
+tells you which licence page to open.
 
 Without a token the app still opens. It says transcription is not available,
 and you can still correct and export earlier work.

@@ -12,7 +12,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from . import ATTRIBUTION, DEFAULT_ASR_MODEL, DEFAULT_LLM_MODEL, __version__
+from . import ATTRIBUTION, DEFAULT_ASR_MODEL, DEFAULT_LLM_MODEL, __version__, load_env
 
 app = typer.Typer(
     add_completion=False,
@@ -95,6 +95,7 @@ def main(
                                  help="Show the version and exit."),
 ):
     _utf8_output()
+    load_env()
 
 
 # --- Transcribe -------------------------------------------------------------

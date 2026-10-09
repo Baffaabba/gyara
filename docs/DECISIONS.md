@@ -28,6 +28,15 @@ proposed again.
 
 ## 2026-10-09
 
+- **The demo Space is public, at `huggingface.co/spaces/Baffaabba/gyara`.**
+  *Why:* Baffa chose public over private so testers need no HF account. The
+  Space warns that uploads are shared.
+  *Applies to:* gyara-app (Space copy), anyone sending the tester kit.
+
+- **Teammates may keep `HF_TOKEN` in a git-ignored `.env`; Gyara reads it on
+  start-up.** *Why:* Baffa logged in from WSL, which Windows can't see, and
+  asked for setup steps everyone can follow. *Applies to:* README, gyara-app.
+
 - **Commit the foundation to `feat/foundation` once the agents finish and the
   tests pass.**
   *Why:* nothing was committed, and the Colab baseline needs the code on GitHub.

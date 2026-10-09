@@ -20,8 +20,10 @@ and Digital Economy, and powered by Awarri Technologies.
 
 import os
 
-from gyara import DEFAULT_ASR_MODEL
+from gyara import DEFAULT_ASR_MODEL, load_env
 from gyara.ui.app import build_app, launch
+
+load_env()  # local runs only; a Space has no .env and uses its secrets
 
 ON_SPACE = bool(os.environ.get("SPACE_ID"))
 _cap = os.environ.get("GYARA_MAX_MINUTES")

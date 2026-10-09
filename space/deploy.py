@@ -59,6 +59,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--private", action="store_true", help="Create the Space as private.")
     a = p.parse_args(argv)
 
+    from gyara import load_env
+
+    load_env(ROOT / ".env")  # a write token in .env works as well as `hf auth login`
+
     out = build()
     files = sorted(str(f.relative_to(out)) for f in out.rglob("*") if f.is_file())
     print(f"Built {out} ({len(files)} files).")

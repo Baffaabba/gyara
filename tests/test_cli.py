@@ -24,6 +24,7 @@ def test_compare_prints_both_sentences_not_json(tmp_path, monkeypatch):
 # --- QA 2026-10-09 install findings -------------------------------------------
 
 import io
+import os
 import json
 import sys
 
@@ -169,3 +170,29 @@ def test_gated_model_gives_three_plain_lines(monkeypatch):
 def test_transcribe_help_has_no_curly_braces():
     res = runner.invoke(cli.app, ["transcribe", "--help"])
     assert "{audio}" not in res.output and "AUDIO" in res.output
+
+
+# --- .env --------------------------------------------------------------------
+
+
+def test_load_env_reads_dotenv_without_overriding(tmp_path, monkeypatch):
+    from gyara import load_env
+
+    (tmp_path / ".env").write_text(
+        '# comment\nHF_TOKEN="hf_from_file"\nGYARA_DEVICE=cpu\nexport GYARA_DB=w.db\nEMPTY=\n',
+        encoding="utf-8")
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    monkeypatch.delenv("EMPTY", raising=False)
+    monkeypatch.delenv("GYARA_DB", raising=False)
+    monkeypatch.setenv("GYARA_DEVICE", "cuda")
+    load_env(tmp_path / ".env")
+    assert os.environ["HF_TOKEN"] == "hf_from_file"
+    assert os.environ["GYARA_DEVICE"] == "cuda"  # the real environment wins
+    assert os.environ["GYARA_DB"] == "w.db"
+    assert "EMPTY" not in os.environ  # a blank value does not mask a login
+
+
+def test_load_env_missing_file_is_fine(tmp_path):
+    from gyara import load_env
+
+    load_env(tmp_path / "nope.env")
