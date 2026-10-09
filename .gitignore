@@ -1,0 +1,43 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# Data and runs never go into git. Audio may carry consent restrictions.
+data/raw/
+data/fleurs/
+data/own/
+# Held-out transcripts are private speech too; only the folder's README is kept.
+data/heldout/*
+!data/heldout/README.md
+workspace/
+exports/
+runs/*/predictions.jsonl
+# Pipeline smoke tests use stand-in models; their numbers are not Gyara results.
+runs/smoke-*/
+checkpoints/
+*.wav
+*.mp3
+*.m4a
+*.mp4
+*.flac
+*.ogg
+*.opus
+*.webm
+*.aac
+*.mov
+*.db
+*.sqlite3
+.env
+hf_token*
+
+# Keep small, committed benchmark summaries.
+!runs/*/metrics.json
+!runs/*/report.md
+
+.claude/worktrees/
+.claude/settings.local.json

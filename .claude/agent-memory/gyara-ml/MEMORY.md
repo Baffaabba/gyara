@@ -1,0 +1,1 @@
+- [Laptop env gotchas](project_laptop_env.md) — no GPU/token, flaky HF CDN, write_text CRLF, slow tests ~11 min

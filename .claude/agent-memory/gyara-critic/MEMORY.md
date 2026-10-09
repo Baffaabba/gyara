@@ -1,0 +1,1 @@
+- [Fri 9 Oct AM checkpoint](project_checkpoint_fri_am.md) — 8 findings (push-before-Colab, contamination caveat, no N-ATLaS measurement path); re-verify next time

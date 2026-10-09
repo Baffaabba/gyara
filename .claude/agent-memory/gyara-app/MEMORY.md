@@ -1,0 +1,1 @@
+- [No HF token on dev laptop](project_no_hf_token.md) — 2026-10-09: gated models 401 locally; Baffa deploys the Space himself

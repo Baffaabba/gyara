@@ -1,0 +1,70 @@
+# Gyara fine-tune config. Every key has a default here; your own config only
+# needs the keys it changes (it is deep-merged over this file).
+# Relative paths are resolved against the current working directory.
+
+# How many configs have been tried so far for this model (eval-integrity rule 3).
+# Bump it every time you change a hyperparameter and re-train. It is written to
+# the model card and to before_after.md so a result is never presented as if it
+# were the only thing tried.
+attempt: 1
+seed: 42
+
+base_model: NCAIR1/Hausa-ASR
+# Hausa-ASR may ship without a usable processor or a multilingual generation
+# config; this model supplies them (same architecture and vocabulary).
+processor_fallback: openai/whisper-small
+# Whisper language/task tokens for labels and generation. null keeps whatever
+# the base model's generation_config does (the Hausa-ASR card sets none).
+language: hausa
+task: transcribe
+
+output_dir: runs/finetune/hausa-asr-gyara
+model_name: hausa-asr-gyara   # renamed derivative: the card adds "Powered by Awarri"
+
+data:
+  # Gyara export dirs (each has manifest.jsonl + audio/). Only verified
+  # segments are exported; rows still marked draft are dropped here too.
+  exports: []
+  # FLEURS ha_ng *train* utterances mixed in to limit forgetting on small data,
+  # as a share of the final training set (0.3 = 30% FLEURS). 0 disables.
+  fleurs_fraction: 0.0
+  # Optional: a FLEURS train manifest you already have. If null and
+  # fleurs_fraction > 0, gyara.data.fetch_fleurs("train") is called.
+  fleurs_manifest: null
+  # Held-out test manifests. Training refuses to start if any audio or speaker
+  # overlaps with these (manifest.leakage_check).
+  heldout: []
+  require_heldout: true
+  # Speaker-disjoint dev split from the training pool, for early stopping only.
+  dev_fraction: 0.1
+  max_duration_s: 30.0
+
+training:
+  learning_rate: 1.0e-5
+  warmup_ratio: 0.1
+  max_steps: 1000
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 2
+  gradient_checkpointing: true
+  # "auto" freezes the encoder when there is less than 5 h of training audio.
+  # With a few hours the decoder (spelling, hooks, vocabulary) is what we can
+  # move safely; updating the acoustic encoder on so little data overfits to
+  # those voices and microphones and tends to hurt unseen speakers.
+  freeze_encoder: auto
+  freeze_encoder_below_hours: 5.0
+  spec_augment: true
+  mask_time_prob: 0.05
+  eval_steps: 100
+  save_total_limit: 2
+  early_stopping_patience: 3
+  generation_max_length: 225
+  logging_steps: 25
+  dataloader_num_workers: 0
+
+eval:
+  # After training, run gyara.evaluate on each held-out manifest for the base
+  # and the tuned model, and write a paired comparison to before_after.md.
+  after: true
+  batch_size: 8
+  limit: null

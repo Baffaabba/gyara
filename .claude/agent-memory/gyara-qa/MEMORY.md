@@ -1,0 +1,1 @@
+- [Windows test harness](reference_windows_test_harness.md) — cp1252 pipe in Bash tool, real-console check, fake clone, 22-min install, kill by PID
