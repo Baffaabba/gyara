@@ -7,13 +7,17 @@ here.
 
 ## Testers
 
-People outside the team. Named, with permission.
+People outside the team. Named, with permission. None named yet (9 Oct).
+
+There is no hosted demo. Each tester either installs Gyara from the README,
+or uses a temporary `gyara ui --share` link during a set window. Both routes
+are in `TESTER-KIT.md`.
 
 | Name | Role / organisation | Contacted | Kit sent | Feedback received | Quote by name? |
 | --- | --- | --- | --- | --- | --- |
-| `[[TESTER 1]]` | | | | | |
-| `[[TESTER 2]]` | | | | | |
-| `[[TESTER 3]]` | | | | | |
+| Pending | | | | | |
+| Pending | | | | | |
+| Pending (optional third) | | | | | |
 
 ## What goes where
 
@@ -36,6 +40,9 @@ agree to share (emails, phone numbers) before committing.
 
 ## Kit
 
-- `TESTER-KIT.md`: what to send each tester.
+- `TESTER-KIT.md`: what to send each tester, and how to host a `--share`
+  session for them.
+- `samples/`: 5 FLEURS sentences and Hausa-ASR's output, for the scoring
+  test.
 - `FEEDBACK-FORM.md`: the questions.
 - `CONSENT-FORM.md`: speaker consent for our own recordings (not for testers).

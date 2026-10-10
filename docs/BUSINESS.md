@@ -75,5 +75,5 @@ The N-ATLAS licence allows free use up to **1,000 active end-users**.
 | Licence cap blocks growth | Start the commercial licence talk early. |
 | Consent and data protection (NDPA 2023) | Written consent per speaker, a data register, right to withdraw. |
 | Dialect gaps (Kano, Sokoto, Zaria, Niger…) | Benchmark by dialect; collect where it is weakest. |
-| An 8B LLM is slow without a GPU | GGUF builds on a laptop CPU; GPU for hosted use. |
+| An 8B LLM is slow without a GPU | GPU for hosted use; a GGUF build on a laptop CPU is supported in code but not yet tested. |
 | Customers will not pay | Interview first; data services as a second revenue line. |

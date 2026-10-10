@@ -1,0 +1,22 @@
+attempt: 1
+base_model: NCAIR1/Hausa-ASR
+language: hausa
+output_dir: runs\smoke-finetune-export\out
+model_name: hausa-asr-gyara-export-smoke
+data:
+  exports:
+  - E:\Repos\gyara\runs\smoke-finetune-export\workspace\exports\gyara-dataset-20261009-183309
+  fleurs_fraction: 0.0
+  heldout:
+  - data/fleurs/test.jsonl
+  dev_fraction: 0.34
+training:
+  max_steps: 2
+  eval_steps: 1
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 1
+  generation_max_length: 64
+  logging_steps: 1
+eval:
+  after: false

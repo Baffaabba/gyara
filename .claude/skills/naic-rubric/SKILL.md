@@ -26,7 +26,7 @@ never let it look like the engine.
 ## The seven components (all required)
 
 1. **Working artefact**: repo, deployed app, published model, live API or dataset.
-   We ship repo (tagged `v0.1.0`) + HF Space + benchmark results (+ dataset/model
+   We ship repo (tagged `v0.1.0`) + local install with `gyara ui --share` for testers (no hosted Space: HF needs PRO; DECISIONS 9 Oct) + benchmark results (+ dataset/model
    if consent and time allow).
 2. **N-ATLAS integration evidence**: show exactly where and how. `docs/N-ATLAS-INTEGRATION.md`.
 3. **Real-world validation**: "Evidence of testing with actual users, real data
@@ -48,7 +48,7 @@ and the **depth of its integration with N-ATLAS**". Weight effort accordingly.
 | Criterion | What earns it for Gyara |
 | --- | --- |
 | Working artefact & technical rigour | Installs from README on a fresh machine; tests green; the loop runs end to end; numbers with CIs |
-| N-ATLAS integration | Both N-ATLAS models used for real work; measured effect of N-ATLaS suggestions; fine-tuned Hausa-ASR; runs on a laptop via GGUF |
+| N-ATLAS integration | Both N-ATLAS models used for real work; measured effect of N-ATLaS suggestions; fine-tuned Hausa-ASR (FLEURS train, DECISIONS 9 Oct); GGUF laptop path supported in code but untested |
 | Real-world validation | First public WER for `NCAIR1/Hausa-ASR` on FLEURS (621 utts) + own held-out audio; ≥ 2 external testers with written feedback; corrected hours collected |
 | Impact potential | Every Hausa speech developer and NCAIR itself get a trustworthy benchmark and a data flywheel; media/creators get subtitles |
 | Scalability & sustainability | Open-source core + hosted subtitles + data services; licence-cap plan (1,000 users) with Awarri commercial path; more languages by swapping the model id |

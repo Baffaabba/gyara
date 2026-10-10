@@ -1,0 +1,80 @@
+{
+  "attempt": 1,
+  "seed": 42,
+  "base_model": "NCAIR1/Hausa-ASR",
+  "language": "hausa",
+  "output_dir": "runs\\smoke-finetune-export\\out",
+  "model_dir": "runs\\smoke-finetune-export\\out\\model",
+  "train_utterances": 4,
+  "dev_utterances": 2,
+  "train_hours": 0.009533333333333333,
+  "own_hours": 0.009533333333333333,
+  "fleurs_utterances": 0,
+  "speakers": 0,
+  "dev_speakers": 0,
+  "encoder_frozen": true,
+  "global_step": 2,
+  "train_loss": 1.4806544780731201,
+  "dev_wer": 0.075,
+  "dev_cer": 0.027649769585253458,
+  "best_checkpoint": "runs\\smoke-finetune-export\\out\\checkpoints\\checkpoint-1",
+  "heldout": [
+    "data\\fleurs\\test.jsonl"
+  ],
+  "rules_version": "1.0.0",
+  "dev_split": "random split of the training pool by utterance (2 utterances): no speaker ids, so the same voice can be in train and dev and dev WER is optimistic",
+  "leakage_note": "Leakage check passed for audio: no file is shared (sha256 of every file). Speaker overlap could only be checked where both sides carry speaker ids: 6 of 6 training/dev and 621 of 621 held-out utterances have none. FLEURS publishes no speaker ids; its dataset card states that train speakers differ from dev/test speakers, which we rely on but cannot check.",
+  "notes": [
+    "language/task tokens: <|hausa|> <|transcribe|>"
+  ],
+  "config": {
+    "attempt": 1,
+    "seed": 42,
+    "base_model": "NCAIR1/Hausa-ASR",
+    "processor_fallback": "openai/whisper-small",
+    "language": "hausa",
+    "task": "transcribe",
+    "output_dir": "runs\\smoke-finetune-export\\out",
+    "model_name": "hausa-asr-gyara-export-smoke",
+    "data": {
+      "exports": [
+        "E:\\Repos\\gyara\\runs\\smoke-finetune-export\\workspace\\exports\\gyara-dataset-20261009-183309"
+      ],
+      "fleurs_fraction": 0.0,
+      "fleurs_manifest": null,
+      "heldout": [
+        "data/fleurs/test.jsonl"
+      ],
+      "require_heldout": true,
+      "dev_fraction": 0.34,
+      "dev_manifest": null,
+      "max_duration_s": 30.0
+    },
+    "training": {
+      "learning_rate": 1e-05,
+      "warmup_ratio": 0.1,
+      "max_steps": 2,
+      "per_device_train_batch_size": 2,
+      "per_device_eval_batch_size": 2,
+      "gradient_accumulation_steps": 1,
+      "gradient_checkpointing": true,
+      "freeze_encoder": "auto",
+      "freeze_encoder_below_hours": 5.0,
+      "spec_augment": true,
+      "mask_time_prob": 0.05,
+      "eval_steps": 1,
+      "save_total_limit": 2,
+      "early_stopping_patience": 3,
+      "generation_max_length": 64,
+      "logging_steps": 1,
+      "dataloader_num_workers": 0
+    },
+    "eval": {
+      "after": false,
+      "batch_size": 8,
+      "limit": null
+    }
+  },
+  "comparisons": [],
+  "before_after": null
+}

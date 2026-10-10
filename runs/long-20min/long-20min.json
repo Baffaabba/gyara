@@ -1,0 +1,366 @@
+{
+  "audio": "data\\fleurs\\long-20min.wav",
+  "model": "NCAIR1/Hausa-ASR",
+  "segments": [
+    {
+      "start": 1.05,
+      "end": 22.822,
+      "text": "an kwatanta faretin gine-ginen da ke yin sararin samaniya, hunkunk, da ginshiƙi mai wakiyya wanda aka bayyana ta gaban ruwan victoria habu. iristotun masanin falsafa ne.",
+      "avg_logprob": -0.25666186213493347,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 23.066,
+      "end": 51.686,
+      "text": "yayi tunanin cewa komai ya ƙunshi caku ɗaya, ofiyar daga abubuwa hudu, sun kasance ƙasa, ruwa, iska, da wuta. tsebirin naƙwanci ne kilomita da ridashirin arewa da sashin ƙasa mai shiga teku, mafi girma shine king jot island mai ɗauke da mazauna na villa estrilas.",
+      "avg_logprob": -0.21736006438732147,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 54.906,
+      "end": 84.006,
+      "text": "a hakika akwai matukar wahalar ganin wajen komaka idan kasan ya kasance, kana shiga cikin kogon zaka ji, kadai ta kama ka. kwatancin 802.11 na aiki duk akan mita 2.4 gigahood da 5.0 gigahood. wasu ƙwayar zarrah",
+      "avg_logprob": -0.2337673306465149,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 84.09,
+      "end": 107.814,
+      "text": "suna da nuclear mai canzawa, wanda ya nuna cewa, suna iya rabewa da ƴar karfaffawa ko babu. a wannan lokaci na tarihin tarayyan turai, cocin katilika, wadda tayi ƙarfi da arziki ta fuskanci bincike.",
+      "avg_logprob": -0.1680515557527542,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 110.682,
+      "end": 131.974,
+      "text": "harin da ke tsakanin cututtukan kwakwalwa da hanaya yana tallafawa masana kiniya a cikin binciken musu.a wannan lokaci na tarayin tarayyan turai, cocin katalika, wanda tayi karfi da arziki ta fuskanci bincike.",
+      "avg_logprob": -0.14563919603824615,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 134.17,
+      "end": 158.534,
+      "text": "amfani da rikonin bidiyo ya haifar da bincike mai mahimmanci a cikin fassara bayanin faska, botan faska, waɗanda ba sabu ce lokaci ƙalilan. musamman ma kamar ikirarin da yaicewa zai gano ko mutum yana karya, fassarar ko fahimtar ƙananan maganganu yadda suke.",
+      "avg_logprob": -0.18667587637901306,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 160.57,
+      "end": 190.374,
+      "text": "cibiyar tabbatar da adalci da dimokuradiyya ta ƙasar iti ta na kan ci wadansu ayyukan nazarin masu azaman kan su wadanda ke tsammanin bataliya kiyaye zaman lafiya, ta majalisar ɗinkin duniya, da ke nafanice ta kawu cutar haiti bisa rashin sani. tabbas da akwai bayanai daga koyarwar addinin kirista",
+      "avg_logprob": -0.2508322596549988,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 190.49,
+      "end": 217.094,
+      "text": "kan wannan al'adar amma dai yana iya kasancewa shekaru ne gabanin bayanar kiristanci akan iya karcibirin da ke kusa da alama ba za a karɓa ba",
+      "avg_logprob": -0.12655383348464966,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 218.33,
+      "end": 245.542,
+      "text": "koda yake ana iya karbar kudin britaniya da amurka, bincike tare da masushi don sanin menene hanyar biyan kuɗi da za'a karɓa.mintuna biyar da fara nunin wata iska ya fara shigowa ciki.",
+      "avg_logprob": -0.14304308593273163,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 245.626,
+      "end": 271.046,
+      "text": "kusan minti ɗaya daga baya, iskar ta doshi, kilomita, saba'in daga baya, ruwan sama ya zo, amma da yawa, da ƙarfin sa ya sauko yadda zai bugi fatar kakamar allura, sannan wani kankara ya fado daga sama.",
+      "avg_logprob": -0.12559820711612701,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 271.098,
+      "end": 298.182,
+      "text": "mutane suna bulgita, suna kuru ruwa, suna tattaƙi juna. motar gyarantar da ofisciya na ta ƙwace masa inda hakan ya cawo fitarsa daga tseren jim ta ɗan bayan farawa. sinadaran haitiridin su ne foton waɗanda suka cire wa elektrons.",
+      "avg_logprob": -0.32607680559158325,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 298.234,
+      "end": 323.366,
+      "text": "tun da suna da ran a'hajjiwajin sun kunshi foton ɗaya da elektron ɗaya. bayan hadar ya faru, an ɗauki gefsan zuwa asibiti, amma ya mutu jim kaɗan bayan haka. wanan ba zai zama bam kwana ba ne, wanan shine rufewar babin tsira ta buɗe wani sabu.",
+      "avg_logprob": -0.3036806881427765,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 326.01,
+      "end": 351.846,
+      "text": "tsirrai sun fi kyau idan suna muhallin suna halitta saboda haka, waje zumo ɗin tsige ko da samfur ɗaya ne kawai.fiary ya faɗi cewa zai dawo texas domin tantance sakamakon kawasu na daren nan.intentance akwai ko akwai alamun ci gabawa a wannan tseren.",
+      "avg_logprob": -0.2120223045349121,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 352.058,
+      "end": 380.294,
+      "text": "amma da gaba ya yace zai ci gaba da tseren sannan yayi gazafi da gwanin ban ishirin da daya ga janairu a saukar alaina. cikin waɗanda aka amince da su akwai ra'ayin fahimtar a ristutu, kan dukkan batutuwan kimiyya,",
+      "avg_logprob": -0.2025577425956726,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 380.826,
+      "end": 406.534,
+      "text": "ciki harda ilimin halayyar dan adam magungunan biyu suna aiki tare da juna don samar da lu'u-lu'u, wadanda zai iya toshe aikin koda masu bincike a jami'ar sun ce",
+      "avg_logprob": -0.12223030626773834,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 410.874,
+      "end": 437.03,
+      "text": "yayin da yake wannan yawanci yawa a yi ne wanda ba daidai ba, hanya mafi kyau don yin sabu a cikin faris har yanzun shine kasancewa kan halayarka mafi kyau, yin aiki kamar wanda yake biyan ab, wanda ya sami tarbiyya mai kyau, zai sanya yin sabu ya kasance mai sauƙi.",
+      "avg_logprob": -0.1550482213497162,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 438.522,
+      "end": 464.934,
+      "text": "rage tashar hankali haka kuma yawan fata na gari da ƙarfin rayuwa zai gabata, wani mutum na da damar samun kwanciyar hankali da gamsuwa. amfani da jirgin ruwa domin kwasan kayayyaki. shine mafi inganci wajen kwasan mutane da yawa da kayayyaki ta teku.",
+      "avg_logprob": -0.11043187975883484,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 469.53,
+      "end": 498.534,
+      "text": "a bai ce babban birnin samuwa, garin yana kan tsibirin ufolin, kuma yana da yawan al'umma da kaɗan ya gaza da duba arba'in.",
+      "avg_logprob": -0.21945232152938843,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 500.154,
+      "end": 526.822,
+      "text": "cutar ms cuta ce da ke shafar da dankar jikin ɗan adam, da ya haɗa da ƙwaƙwalwa da jijiyar laka da kuma na kai sa kunnu.idan za ka tsalle kare wacce mun baltik a lokacin sanyi, duba wurin taragon saboda ratsa kan ƙara na jawo wani mu mu na ƙara ga waɗanda abin ya fi shafa.",
+      "avg_logprob": -0.240543395280838,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 529.338,
+      "end": 559.27,
+      "text": "yanzu mutane suna rubuta saƙonni akan fuskokin kanfuka ba tare da sun taba kusantar shafin ba. har yanzu akwai maza da mata da yawa da ke raye, wadanda suka rayu lokacin su a nan. kuma da yawa da yawa, wadanda suke da ƙaunattattun su,",
+      "avg_logprob": -0.1848311573266983,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 559.674,
+      "end": 581.382,
+      "text": "wadan da aka kashe ko suka yi aiki zuwa can, ya huda da waɗanda ba ya huda ba. sakwani akan fuskokin kwamfuka ba tare da sun taba kusantar shafa na ba.",
+      "avg_logprob": -0.17462940514087677,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 587.802,
+      "end": 617.51,
+      "text": "rahoton ya yi matukar yin suka ga kusan dukkan ɓangarorin manufar ɓangaren zattaswa na yanzu a kan ƙasar iraki, indiya nemi a gaggauta canza alƙibila. Har yanzu nemi shawara daga hukumomi yin biyaya ga dukan alamo da kuma kulle sosai game da gagaɗin lafiya.",
+      "avg_logprob": -0.1411876529455185,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 620.378,
+      "end": 647.078,
+      "text": "gugun kayayyakin sa wa masu lemu.muhammadu yana matukar sha'awar al'amuran da ke da suke wuce rayuwar wannan duniya, yana yawan ziyarar kogon da aka fi sani da hira a tsaunin nur, wato haske domin kaɗai cewa ya yi tunani.",
+      "avg_logprob": -0.15849334001541138,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 649.626,
+      "end": 678.822,
+      "text": "cikka abun wanda za a tattauna a bani, tsunhaɗa da ya da za a ce cewa gowar da zaukan duniya, buɗan yarfasa da ya da za a taimakawa a ƙasashin masu tasowa, su raje gurbata ma hannu. an ruwaito cewa yana cikin shekaran sa na ishirin a cikin wata sanarwa, bibaya ce, duk,",
+      "avg_logprob": -0.32597842812538147,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 678.842,
+      "end": 705.926,
+      "text": "da yake bana wurin kuma ba ni da hannu kai tsaye cikin wannan mummunan haɗari tunani da ado'ina suna tare da dangin waɗanda abin yarutsa da su. mutum zai iya yin mamakin abinda kibor zai zama.",
+      "avg_logprob": -0.13478605449199677,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 706.522,
+      "end": 729.19,
+      "text": "idan wani sabon abu ya ɓullo. akwai buƙatar neman shawowari daga wassan gwamnati ba gwamnati ka kawai ba, amadai shawowarinsu an tara su ne domin yankasar su.",
+      "avg_logprob": -0.23196130990982056,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 733.242,
+      "end": 762.95,
+      "text": "kusan duk wuraren bakin teku ne masu yashi da ihu cikin aminci kuma yawancin suna da inwa da bishiyoyin fahudu kawai ke samarwa. a wasu hanyoyin manyan kamfanoni da najeriya gyana samansu",
+      "avg_logprob": -0.173815056681633,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 763.002,
+      "end": 790.854,
+      "text": "amma abbasu hanyoyi daban da kananan kamfanoni akwai matsana. kodayake aliyana da ƙarfin karin ma'ana almara ta kimiyya. aliyan kasance wani reshe ne kimiyyar kwamfuta, maimatuƙar mahimmanci,",
+      "avg_logprob": -0.24666805565357208,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 790.97,
+      "end": 819.206,
+      "text": "da ke mu'amala da halayya, koyo da kuma shigar da fasahar ƙwaƙwalwa a cikin injin. Asibitin ta bi ka idoji na kula da kamuwa da cuta tare da raba masu jiya. Daga sauran jama'a domin hana yaduwar cutan.",
+      "avg_logprob": -0.10314403474330902,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 822.746,
+      "end": 847.366,
+      "text": "dubal, wanda ke da mata da manyan ƴaƴa wuda biyu, be burge mi labar wanda ke da alaƙa da labarin. yana da sirinta a ƙarƙashin mariya kuma ya fi ƙauri a ƙarƙashin tsaunuka.",
+      "avg_logprob": -0.14214082062244415,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 850.33,
+      "end": 874.47,
+      "text": "garin kuma shine tushe da zai hau dutsen niragungu, tare da wasu daga cikin mafi sauƙin farashin duwatsin gorila a afirka. rage tashan hankali haka kuma yawan fata na gari da ƙarfin rayuwa zai gabata. ko wani mutum na da damar samun kwanciyar hankali daga musuwa.",
+      "avg_logprob": -0.1220041885972023,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 876.89,
+      "end": 894.278,
+      "text": "yamshin kayayyaki da aka dafa da jamusanci, suma suna da alamomin almara, ƙwaya, da tsaron ƙwayoyin itacen, mashahorin wainar, ba da dadewa ba, haɗe biyu, tare da kofi mai ƙarfi.",
+      "avg_logprob": -0.14714395999908447,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 895.77,
+      "end": 916.39,
+      "text": "shagon yanar gizo na labarin nishaɗi na temzat ya fahimta cewa mai ɗaukar hoton ɗin ya tsaya da motarsa, hatsallakin titin sifal veɗa bulibad, kuma ya yi ƙoƙarin ɗaukar hotuna na tsaya bar ƴan sanda kafin ya tsallaka titin kuma ya cigaba.",
+      "avg_logprob": -0.2172810137271881,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 916.602,
+      "end": 943.238,
+      "text": "wanda ya sa ɗan sanda na sintirin babbar hanya ta califona wanda yake ba da hannu ya umurce shi ya koma a ƙatar sau biyu. ya ƙira cita-ciara ta cewa hirar siyasa ta wauta. bayan gina maɗazar ruwa a",
+      "avg_logprob": -0.2675545811653137,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 943.77,
+      "end": 970.63,
+      "text": "shekara dubu ɗaya da alif ɗari tara da sittin da uku, anbaliyar ruwa da ke zuwa akai-akai, kuma yadda ƙasa zuwa kogi ya tsaya. mata yana da kyau kowane mata matafiya su ce sun yi aure ba tare da la'akari da ainiyar matsayin auren ba.",
+      "avg_logprob": -0.1543513387441635,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 974.362,
+      "end": 999.59,
+      "text": "a lokacin 1920s, hana yi ma filin jayena yawancin ƴan ƙasa da ƙasashe shine na zaman lafiya da keɓewa. zakuna ne dangin mage da suka fi daɗin mu'amala suna taruwa wuri ɗaya abinda ake kira iku.",
+      "avg_logprob": -0.10440876334905624,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1006.778,
+      "end": 1031.27,
+      "text": "bashi kaɗai bane da yin gwaji kuma gwaji wata hanya ce ta jarabawa da ake amfani da ita domin kawar da ɗaya, kofiye, daga cikin harsashe da za a samu, yin tambayoyi da faɗin mu.",
+      "avg_logprob": -0.09229083359241486,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1031.322,
+      "end": 1060.646,
+      "text": "ra'ayi suma suna yin jagora gabin cikin kimiyya. Aristotel, masanin falsafa ne, yayin tunani cewa komai ya ƙunshi cakuda ɗaya, kofiye, daga abubuwa hudu sun kasance ƙasa ruwa iska da wuta.",
+      "avg_logprob": -0.17319323122501373,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1065.466,
+      "end": 1093.158,
+      "text": "aristoci, matsani falfasa ne, yayin tunani cewa komai ya kunshi cakuda, daya ko fiye daga abubuwa kubu, sun kasance kasa, ruwa, iska da wuta. matafiya zuwa kasashen",
+      "avg_logprob": -0.21603791415691376,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1093.626,
+      "end": 1122.374,
+      "text": "masu tsananin haraji zasu iya adana wani adadin kuɗi mai yawa a wasu lokuta na musamman akan abubuwa kamar barasa da taba wasu jiragen ruwa sukan sanya ba lin jamus a cikin littafin bayanin",
+      "avg_logprob": -0.11669829487800598,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1122.458,
+      "end": 1151.718,
+      "text": "kamar yadda kake gani daga taswirar da ke sama babu inda ba lin tayi kusa da teku, kuma ba a haɗa ziyar birnin ba a farashin jirgi. sinadirin hijirin suna proton wadanda suka cire wa electrons, tun da sinadirin hijirin sun kunshi proton ɗaya da elektron ɗaya.",
+      "avg_logprob": -0.24694865942001343,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1154.266,
+      "end": 1181.51,
+      "text": "muhammadu yana matukar shawar al'amuran da suka wuce rayuwar wannan duniya, yana yawan ziyarar kogo da aka fi sani da na hira a tsaunin nure, wato haske domin kaɗai cewa ya yi tunani.",
+      "avg_logprob": -0.153804749250412,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1185.466,
+      "end": 1211.046,
+      "text": "a bayyane take, idan kasan gyaran romans, zai yi sauki maka ka koyi patugies. a pizza wani madogara ana bukatan maza su sanya wanduna da ke rufe kwiwowi.",
+      "avg_logprob": -0.2637885808944702,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1213.754,
+      "end": 1242.694,
+      "text": "cikakken kashi iswim cikin ɗari na ruwan da ke zuɓowa daga koreman duniya zuwa cikin teku yana zuwa ne daga amazone. saide kashin xdr, dashi biyu da ke jikin duk rukunin mutane da ke da tarin fuka har yanzu da alamar",
+      "avg_logprob": -0.21718527376651764,
+      "flags": [],
+      "words": null
+    },
+    {
+      "start": 1243.642,
+      "end": 1259.238,
+      "text": "yana ƙasa, dubu, shida daga cikin jamilar mutane, dubu uku da talatin da suka kamu a kowane lokaci a afirka ta kudu.",
+      "avg_logprob": -0.12226642668247223,
+      "flags": [],
+      "words": null
+    }
+  ]
+}

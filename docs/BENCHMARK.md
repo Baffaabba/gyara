@@ -145,8 +145,8 @@ have.
    Conversational, broadcast or noisy Hausa will score differently.
 
 Caveats 3, 4 and 6 and the 30/34/11 counts come from re-scoring
-`predictions.jsonl`. Those files are currently git-ignored. Commit them, or
-add these counts to `evaluate.py`'s report, before quoting them publicly.
+`predictions.jsonl`. For the FLEURS runs those files are committed under
+`runs/`, so anyone can check these counts.
 
 ## Other measured numbers
 

@@ -27,6 +27,8 @@ data:
   exports: []
   # FLEURS ha_ng *train* utterances mixed in to limit forgetting on small data,
   # as a share of the final training set (0.3 = 30% FLEURS). 0 disables.
+  # 1.0 means FLEURS train only (allowed only with no exports): every FLEURS
+  # train utterance is used.
   fleurs_fraction: 0.0
   # Optional: a FLEURS train manifest you already have. If null and
   # fleurs_fraction > 0, gyara.data.fetch_fleurs("train") is called.
@@ -36,7 +38,13 @@ data:
   heldout: []
   require_heldout: true
   # Speaker-disjoint dev split from the training pool, for early stopping only.
+  # Without speaker ids (FLEURS) it falls back to a split by utterance, and
+  # the report says so.
   dev_fraction: 0.1
+  # Optional: a ready dev manifest instead of splitting the pool (e.g. FLEURS
+  # validation, whose speakers differ from FLEURS train). It is leakage-checked
+  # against held-out too, and dev_fraction is then ignored.
+  dev_manifest: null
   max_duration_s: 30.0
 
 training:

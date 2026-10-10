@@ -1,0 +1,8 @@
+start 2026-10-09T19:07:41+01:00
+E:\Repos\gyara\.venv\Lib\site-packages\torch\jit\_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+The following generation flags are not valid and may be ignored: ['output_scores']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+Wrote runs\long-20min\long-20min.json: 45 segments
+exit 0
+end 2026-10-09T19:24:10+01:00 wall_s 988

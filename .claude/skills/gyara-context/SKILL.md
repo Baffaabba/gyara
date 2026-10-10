@@ -39,7 +39,7 @@ is the fallback submission if Layer B (the loop) slips.
 - LLM: `NCAIR1/N-ATLaS` (Llama-3 8B fine-tune), suggestions only, **never
   auto-applied**. Optional Hausa→English subtitles.
 - Hausa only. Uploaded files only (no live). No dubbing, no diarisation.
-- Demo hosted on a Hugging Face Space (fallback: local-install guide).
+- No hosted demo: testers use a local install plus `gyara ui --share` (HF needs PRO for Gradio Spaces; DECISIONS 9 Oct).
 - Normalisation rules are versioned in `gyara/normalize.py`
   (`RULES_VERSION`) and written in `docs/NORMALISATION.md`; a strong
   written-Hausa speaker owns them.

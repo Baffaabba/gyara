@@ -4,8 +4,8 @@
 
 *Gyara* is Hausa for "correction". It is an open-source toolkit for developers
 working with [`NCAIR1/Hausa-ASR`](https://huggingface.co/NCAIR1/Hausa-ASR) and
-[`NCAIR1/N-ATLaS`](https://huggingface.co/NCAIR1/N-ATLaS). It closes the loop
-that nobody had built:
+[`NCAIR1/N-ATLaS`](https://huggingface.co/NCAIR1/N-ATLaS). It closes this
+loop:
 
 ```
 transcribe ──► N-ATLaS suggests ──► a person corrects ──► measure WER/CER
@@ -17,13 +17,45 @@ Built for NAIC 2026, Problem Statement 01: Developer Infrastructure.
 
 ## Results
 
-**Pending.** No benchmark run has finished yet, so there are no numbers here.
-This table will hold only numbers read from `runs/*/metrics.json`.
+On the FLEURS Hausa test set, `NCAIR1/Hausa-ASR` gets 30.2% of words wrong
+(WER 30.19%, 95% CI 28.63–31.84; 621 clips, 331 sentences). Character error
+rate is 10.1%.
 
-Every number will be a pooled word error rate with a 95% bootstrap confidence
-interval, scored under the Hausa rules in
-[docs/NORMALISATION.md](docs/NORMALISATION.md). Comparisons will use a paired
-bootstrap test.
+| Model | WER standard | WER lenient | CER standard |
+| --- | --- | --- | --- |
+| `NCAIR1/Hausa-ASR` | **30.19** [28.63, 31.84] | 27.33 [25.77, 28.98] | 10.08 [9.00, 11.35] |
+| `openai/whisper-small` (its base model) | 89.81 [88.51, 91.28] | 89.38 [88.06, 90.85] | 30.88 [29.60, 32.38] |
+
+Percent, lower is better, 95% cluster-bootstrap confidence intervals. FLEURS
+Hausa test: 621 clips, 331 sentences, 3.34 hours. Rules version `1.0.0`
+([docs/NORMALISATION.md](docs/NORMALISATION.md)).
+
+- **Read these FLEURS numbers with one caveat.** The `NCAIR1/Hausa-ASR`
+  model card does not list its training data. If FLEURS was in it, the
+  FLEURS score may be optimistic. Our own held-out audio from new speakers
+  would settle this. It is not measured yet.
+- **Standard is the headline; lenient sits beside it.** Lenient also ignores
+  hooked letters (ɓ ɗ ƙ 'y). FLEURS references often leave hooks out where
+  Hausa-ASR writes them, so on FLEURS the lenient score is arguably the fairer
+  one. We fixed standard as the headline before we saw any results.
+- **Against its base model**, Hausa-ASR has 59.62 points lower WER (95% CI
+  −61.00 to −58.17, p < 0.001, same 621 clips, paired test).
+- **N-ATLaS spelling suggestions** had a small effect. Accepting every
+  suggestion that passed Gyara's guard, with no human review, changed WER by
+  −0.18 points (95% CI −0.30 to −0.07, p = 0.002, MDE 0.17). Some suggestions
+  made the text worse, which is why a person decides.
+- **Fine-tuning result: pending.** We are fine-tuning on FLEURS train and
+  will measure once on FLEURS test. That shows the kit works end to end, not
+  what human corrections add.
+
+Method, all seven caveats and the files behind each number:
+[docs/BENCHMARK.md](docs/BENCHMARK.md). Run reports:
+[`runs/hausa-asr-fleurs/report.md`](runs/hausa-asr-fleurs/report.md),
+[`runs/whisper-small-fleurs/report.md`](runs/whisper-small-fleurs/report.md),
+[`runs/hausa-asr-fleurs/compare.md`](runs/hausa-asr-fleurs/compare.md),
+[`runs/hausa-asr-fleurs-natlas/report.md`](runs/hausa-asr-fleurs-natlas/report.md),
+[`runs/leaderboard.md`](runs/leaderboard.md). The per-clip predictions
+(`predictions.jsonl`) are committed, so anyone can re-score them.
 
 ## Install
 
@@ -102,7 +134,7 @@ accept their licence. Do this before anything else, with your own account.
 5. Make a token at
    [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
    A **read** token is enough to use the models. You need a **write** token
-   only to deploy the Space.
+   only to deploy a Space (optional, see the end of this page).
 
 Then give Gyara the token in one of these ways:
 
@@ -142,8 +174,10 @@ Without a token the app still opens. It says transcription is not available,
 and you can still correct and export earlier work.
 
 No GPU? Transcription runs on a laptop CPU, slowly. For N-ATLaS suggestions
-without a GPU, serve a GGUF build (for example `tosinamuda/N-ATLaS-GGUF`) with
-`llama-server` and pass `--suggest openai --llm-url http://localhost:8080`.
+without a GPU, you can serve a community GGUF build (for example `tosinamuda/N-ATLaS-GGUF`) with `llama-server` and pass
+`--suggest openai --llm-url http://localhost:8080`. We have not yet tested or
+timed this route; our measured suggestions ran on a Colab T4 GPU.
+
 ### The Colab notebooks (no GPU needed on your side)
 
 | Notebook | What it does | Run it when |
@@ -197,7 +231,8 @@ gyara export dataset --out exports/my-corrections --heldout data/heldout/own.jso
 Your work is kept in `workspace/gyara.db` (change it with `--db`). N-ATLaS
 suggestions are off by default. To turn them on without a GPU, start a GGUF
 build with `llama-server`, then run
-`gyara ui --llm-backend openai --llm-url http://localhost:8080`.
+`gyara ui --llm-backend openai --llm-url http://localhost:8080` (not yet
+tested by us).
 
 **Fine-tune** Hausa-ASR on your corrections and measure the change honestly:
 
@@ -231,7 +266,7 @@ Run `gyara --help` for everything else.
 | Model | Role in Gyara |
 | --- | --- |
 | `NCAIR1/Hausa-ASR` | The transcription engine; the model Gyara benchmarks and fine-tunes |
-| `NCAIR1/N-ATLaS` | Spelling and punctuation suggestions behind a guard, and Hausa→English subtitles |
+| `NCAIR1/N-ATLaS` | Spelling and punctuation suggestions behind a guard. Optional Hausa→English subtitles (built, not yet tested on real audio) |
 
 `openai/whisper-small` appears only as a comparison baseline. Details:
 [docs/N-ATLAS-INTEGRATION.md](docs/N-ATLAS-INTEGRATION.md).
@@ -248,10 +283,29 @@ on the test set.
 - [N-ATLAS integration](docs/N-ATLAS-INTEGRATION.md)
 - [Business model](docs/BUSINESS.md)
 
-## Deploy the demo to a Hugging Face Space
+## Let testers try the app
 
-The Space runs the same app on free CPU hardware. From the repository folder,
-with a Hugging Face token that can write (`hf auth login`):
+There is no hosted demo. Testers either install Gyara with the steps above, or
+use a temporary link from someone who has:
+
+```bash
+gyara ui --share
+```
+
+Gradio prints a public `https://….gradio.live` link. Send it to your testers.
+It works only while your terminal stays open, and everyone with the link
+shares your workspace and can see what others upload. Stop it with Ctrl+C.
+The step-by-step guide for testers is
+[docs/validation/TESTER-KIT.md](docs/validation/TESTER-KIT.md).
+
+## Deploy to a Hugging Face Space (optional)
+
+Hugging Face now requires a paid PRO account to host a Gradio Space, so we do
+not run one. If you have PRO, the files in `space/` deploy the same app. We
+have not been able to test this deployment.
+
+From the repository folder, with a Hugging Face token that can write
+(`hf auth login`):
 
 ```bash
 python space/deploy.py --repo YOUR-NAME/gyara

@@ -1,0 +1,2 @@
+- [Source docs vs Markdown copies](project_source_docs.md) — PDFs = same version; Markdown drops "done when" lines and "(or team server)"
+- [Demo hosting](project_demo_hosting.md) — HF Space blocked (PRO) on 9 Oct; G2 fallback is local install + `--share`

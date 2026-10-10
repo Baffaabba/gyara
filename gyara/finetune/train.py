@@ -85,8 +85,11 @@ def load_config(config: str | Path | dict | None = None) -> dict:
         v = cfg["data"].get(key)
         cfg["data"][key] = [] if v is None else ([v] if isinstance(v, (str, Path)) else list(v))
     f = float(cfg["data"].get("fleurs_fraction") or 0.0)
-    if not 0.0 <= f < 1.0:
-        raise ValueError("data.fleurs_fraction must be in [0, 1)")
+    if not 0.0 <= f <= 1.0:
+        raise ValueError("data.fleurs_fraction must be in [0, 1]")
+    if f == 1.0 and cfg["data"]["exports"]:
+        raise ValueError("data.fleurs_fraction: 1.0 means FLEURS train only; "
+                         "remove data.exports or use a value below 1")
     return cfg
 
 
@@ -117,7 +120,10 @@ def read_export(export_dir: str | Path) -> list[Row]:
                 duration=r.get("duration"),
                 source=r.get("source", "own"),
                 # asset_sha256 hashes the source recording, not this clip: not used here.
-                extra={"draft": r.get("draft", False)},
+                # In metadata.jsonl `draft` is the speech model's first-draft *text*
+                # (export.py), not a status flag: only a literal true marks a row
+                # unverified. Treating the text as truthy dropped every row.
+                extra={"draft": r.get("draft") is True},
             ))
     else:
         raise FileNotFoundError(f"{d}: no manifest.jsonl or metadata.jsonl (is this a gyara export?)")
@@ -227,6 +233,39 @@ def mix_fleurs(own: list[Row], fleurs: list[Row], fraction: float, seed: int = 4
     n = min(len(fleurs), round(fraction / (1 - fraction) * len(own)))
     rng = random.Random(seed)
     return list(own) + rng.sample(fleurs, n)
+
+
+def _utt(n: int) -> str:
+    return f"{n} utterance{'' if n == 1 else 's'}"
+
+
+def _split_description(pool: list[Row], dev: list[Row]) -> str:
+    """How ``speaker_dev_split`` split ``pool``, in words for the report."""
+    if not dev:
+        return "no dev split"
+    if len({r.speaker for r in pool if r.speaker}) >= 2:
+        return f"speaker-disjoint split of the training pool ({_utt(len(dev))})"
+    return (f"random split of the training pool by utterance ({_utt(len(dev))}): "
+            "no speaker ids, so the same voice can be in train and dev and dev WER is optimistic")
+
+
+def _leakage_note(train: list[Row], held: list[Row]) -> str:
+    """What the passed leakage check actually proved, given the speaker labels."""
+    if not held:
+        return "No held-out manifest: nothing was checked."
+    t_missing = sum(1 for r in train if not r.speaker)
+    h_missing = sum(1 for r in held if not r.speaker)
+    if not t_missing and not h_missing:
+        return ("Leakage check passed: no shared audio (sha256 of every file) and no "
+                "shared speaker ids between training/dev and held-out data.")
+    note = (f"Leakage check passed for audio: no file is shared (sha256 of every file). "
+            f"Speaker overlap could only be checked where both sides carry speaker ids: "
+            f"{t_missing} of {len(train)} training/dev and {h_missing} of {len(held)} "
+            "held-out utterances have none.")
+    if any(r.source == "fleurs" for r in train + held):
+        note += (" FLEURS publishes no speaker ids; its dataset card states that train "
+                 "speakers differ from dev/test speakers, which we rely on but cannot check.")
+    return note
 
 
 def load_audio(path: str) -> np.ndarray:
@@ -405,17 +444,30 @@ def prepare_data(cfg: dict) -> dict:
                              "(or set data.require_heldout: false for a throwaway run).")
         warnings.warn("No held-out manifest: nothing guards against leakage and there "
                       "will be no before/after numbers.", stacklevel=2)
-    # Check the whole pool (own + FLEURS candidates) before anything is split.
-    text_notes = check_leakage(own + fleurs, heldout)
+    dev_path = d.get("dev_manifest")
+    dev_given = mf.read(dev_path) if dev_path else []
+    # Check the whole pool (own + FLEURS candidates + any given dev set) before
+    # anything is split: dev picks the checkpoint, so it must not be test data either.
+    text_notes = check_leakage(own + fleurs + dev_given, heldout)
 
     seed = int(cfg["seed"])
-    if own:
+    frac = float(d.get("fleurs_fraction") or 0)
+    if dev_path:
+        train_rows = mix_fleurs(own, fleurs, frac, seed) if own else list(fleurs)
+        dev = dev_given
+        dev_split = f"given dev manifest {Path(dev_path).as_posix()} ({_utt(len(dev))})"
+    elif own:
         train_own, dev = speaker_dev_split(own, float(d["dev_fraction"]), seed)
-        train_rows = mix_fleurs(train_own, fleurs, float(d.get("fleurs_fraction") or 0), seed)
+        train_rows = mix_fleurs(train_own, fleurs, frac, seed)
+        dev_split = _split_description(own, dev)
     else:
         train_rows, dev = speaker_dev_split(fleurs, float(d["dev_fraction"]), seed)
+        dev_split = _split_description(fleurs, dev)
     hours = sum(_duration(r) for r in train_rows) / 3600
+    held_rows = [r for h in heldout for r in mf.read(h)]
     return {
+        "dev_split": dev_split,
+        "leakage_note": _leakage_note(train_rows + dev, held_rows),
         "train": train_rows,
         "dev": dev,
         "heldout": heldout,
@@ -514,6 +566,8 @@ def train(config: str | Path | dict | None = None) -> dict:
         "best_checkpoint": trainer.state.best_model_checkpoint,
         "heldout": [str(h) for h in data["heldout"]],
         "rules_version": RULES_VERSION,
+        "dev_split": data["dev_split"],
+        "leakage_note": data["leakage_note"],
         "notes": notes + data["text_overlap_warnings"],
         "config": cfg,
         "comparisons": [],
@@ -523,7 +577,8 @@ def train(config: str | Path | dict | None = None) -> dict:
         summary["comparisons"] = _evaluate_after(cfg, model_dir, data["heldout"], out)
         summary["before_after"] = str(write_before_after(out / "before_after.md", summary))
     write_model_card(model_dir / "README.md", summary)
-    (out / "summary.json").write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
+    (out / "summary.json").write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8",
+                                      newline="\n")
     return summary
 
 
@@ -569,19 +624,35 @@ def verdict(cmp: dict, a: str = "tuned", b: str = "base") -> str:
     return "Comparison result not understood; see the JSON below."
 
 
+def _data_sources(s: dict) -> str:
+    """'human-verified Gyara exports', 'FLEURS ha_ng train', or both."""
+    parts = []
+    if s.get("own_hours"):
+        parts.append("human-verified Gyara exports")
+    if s.get("fleurs_utterances"):
+        parts.append("the FLEURS ha_ng train split (read speech, CC-BY-4.0)")
+    return " and ".join(parts) or "no data"
+
+
+def _speaker_count(n: int | None) -> str:
+    return f"{n} speakers" if n else "speakers not labelled"
+
+
 def write_before_after(path: Path, summary: dict) -> Path:
     lines = [
         "# Before / after fine-tuning",
         "",
         f"Base model: `{summary['base_model']}`. Tuned model: `{summary['model_dir']}`.",
         f"Configs tried for this model so far: **{summary['attempt']}** (`attempt`). "
-        "Hyperparameters were chosen on the speaker-disjoint dev split; each held-out "
-        "set below is evaluated once.",
-        f"Training data: {summary['train_utterances']} utterances, "
+        "The checkpoint was picked on the dev set below, never on held-out data; each "
+        "held-out set below is evaluated once.",
+        f"Training data: {_data_sources(summary)}: {summary['train_utterances']} utterances, "
         f"{summary['train_hours']:.2f} h ({summary['own_hours']:.2f} h own audio, "
         f"{summary['fleurs_utterances']} FLEURS train utterances), "
-        f"{summary['speakers']} speakers. Normalisation rules v{summary['rules_version']} "
-        "(`standard` mode).",
+        f"{_speaker_count(summary.get('speakers'))}. Normalisation rules "
+        f"v{summary['rules_version']} (`standard` mode).",
+        f"Dev set: {summary.get('dev_split', 'not recorded')}.",
+        f"Leakage: {summary.get('leakage_note', 'not recorded')}",
         "",
     ]
     for c in summary["comparisons"]:
@@ -589,7 +660,7 @@ def write_before_after(path: Path, summary: dict) -> Path:
                   "<details><summary>Full comparison</summary>", "", "```json",
                   json.dumps(c["compare"], indent=2, default=str), "```", "", "</details>", ""]
     lines += ["", ATTRIBUTION, ""]
-    path.write_text("\n".join(lines), encoding="utf-8")
+    path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     return path
 
 
@@ -619,15 +690,15 @@ tags: [automatic-speech-recognition, whisper, hausa, gyara]
 # {title}
 
 Fine-tuned from [`{s['base_model']}`](https://huggingface.co/{s['base_model']}) with
-[Gyara](https://github.com/) on human-verified Hausa transcripts.
+[Gyara](https://github.com/Baffaabba/gyara) on {_data_sources(s)}.
 
 ## Training data
 
 - {s['train_utterances']} utterances, {s['train_hours']:.2f} h
   ({s['own_hours']:.2f} h own audio, {s['fleurs_utterances']} FLEURS ha_ng train utterances)
-- {s['speakers']} training speakers; dev split: {s['dev_utterances']} utterances,
-  {s['dev_speakers']} speakers, disjoint from training speakers
-- Leakage check against every held-out manifest passed (no shared audio, no shared speakers)
+- Training speakers: {_speaker_count(s.get('speakers'))}
+- Dev set (checkpoint choice only): {s.get('dev_split', 'not recorded')}
+- {s.get('leakage_note', 'Leakage check passed.')}
 
 ## Training
 
@@ -647,7 +718,7 @@ Fine-tuned from [`{s['base_model']}`](https://huggingface.co/{s['base_model']}) 
 
 {ATTRIBUTION}
 """
-    path.write_text(card, encoding="utf-8")
+    path.write_text(card, encoding="utf-8", newline="\n")
     return path
 
 

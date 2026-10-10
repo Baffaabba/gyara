@@ -19,8 +19,15 @@ exports/
 runs/**/predictions.jsonl
 runs/**/*.log
 # Pipeline smoke tests use stand-in models; their numbers are not Gyara results.
-runs/smoke-*/
+runs/smoke-*
 checkpoints/
+# Model weights never go into git (fine-tune output keeps only its model card).
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.gguf
 *.wav
 *.mp3
 *.m4a
@@ -42,8 +49,14 @@ hf_token*
 # Predictions on public FLEURS data (CC-BY-4.0) are kept so anyone can re-score.
 # Own-audio runs must not be named or placed like these.
 !runs/*fleurs*/predictions.jsonl
+# The FLEURS fine-tune (notebooks/finetune_colab.ipynb, DATA = "fleurs") nests its
+# before/after runs under runs/finetune-fleurs/<model>/eval/<run>/.
+!runs/*fleurs*/**/predictions.jsonl
 !runs/dev/*/predictions.jsonl
 !runs/probe/*/predictions.jsonl
 
 .claude/worktrees/
 .claude/settings.local.json
+
+# Downloaded result/source zips dropped at the repo root; results live unzipped in runs/.
+/*.zip

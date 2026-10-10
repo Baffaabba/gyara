@@ -1,0 +1,477 @@
+{
+  "source": "FLEURS ha_ng test (CC-BY-4.0)",
+  "gap_s": 0.5,
+  "total_s": 1273.04,
+  "n_clips": 67,
+  "clips": [
+    {
+      "id": "fleurs_ha_ng_test_10063376879559181525",
+      "group": "1801",
+      "start": 0.0,
+      "end": 18.96,
+      "text": "An kwatanta faretin gine-ginen da ke yin sararin samaniyar Hong Kong da ginshiƙi mai walƙiya wanda aka bayyana ta gaban ruwan Victoria Harbor."
+    },
+    {
+      "id": "fleurs_ha_ng_test_1011451118830394019",
+      "group": "1833",
+      "start": 19.46,
+      "end": 34.16,
+      "text": "Aristotle, masanin falsafa ne, yayi tunanin cewa komai ya kunshi cakuda daya ko fiye daga abubuwa hudu. Sun kasance ƙasa, ruwa, iska, da wuta."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10130278018512375037",
+      "group": "1758",
+      "start": 34.66,
+      "end": 53.74,
+      "text": "Tsibirin na kwanciye 120 km arewa da sashin kasa mai shiga teku. Mafi girma shine King George Island mai dauke da mazauna na Villa Estrellas."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10203648568113620209",
+      "group": "1900",
+      "start": 54.24,
+      "end": 68.64,
+      "text": "A hakika akwai matukar wahalar gano wajen ko ma ka idan ka san ya kasance. Kana shiga cikin kogon zaka ji kadaita ta kama ka."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10262687583681135357",
+      "group": "1811",
+      "start": 69.14,
+      "end": 79.7,
+      "text": "Kwatancin 802.11n na aiki duk akan mita 2.4Ghz da 5.0Ghz."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10270881705223021661",
+      "group": "1766",
+      "start": 80.2,
+      "end": 97.0,
+      "text": "Wasu kwayar zarra suna da nuclei mai canzawa wanda ya nuna cewa suna iya rabewa da ‘yar ƙarfafawa ko babu ."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10274607477242713999",
+      "group": "1991",
+      "start": 97.5,
+      "end": 109.38,
+      "text": "A wannan lokaci na tarihin Tarayyan Turai, cocin Katolika, wadda ta yi karfi da arziki, ta fuskanci bincike."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10275407413289163724",
+      "group": "1821",
+      "start": 109.88,
+      "end": 121.7,
+      "text": "Halin da ke tsakanin cututtukan kwakwalwa da halayyar yana tallafawa masana kimiyya a cikin binciken su."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10291405143076270704",
+      "group": "1991",
+      "start": 122.2,
+      "end": 132.94,
+      "text": "A wannan lokaci na tarihin Tarayyan Turai, cocin Katolika, wadda ta yi karfi da arziki, ta fuskanci bincike."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10340343059762214769",
+      "group": "1775",
+      "start": 133.44,
+      "end": 147.36,
+      "text": "Amfani da rikodin bidiyo ya haifar da bincike mai mahimmanci a cikin fassara bayanan fuska, motsin fuska waɗanda ba sa wuce lokaci ƙalilan."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10435630491638189387",
+      "group": "1884",
+      "start": 147.86,
+      "end": 159.56,
+      "text": "Musamman ma kamar, ikirarin da ya yi cewa zai gano ko mutum yana karyar fassarar/fahimtar kananan maganganu yadda suke."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10460143409645722218",
+      "group": "1804",
+      "start": 160.06,
+      "end": 181.18,
+      "text": "Cibiyar Tabbatar da Adalci da Demokradiyya ta ƙasar Haiti ta nakalto waɗansu ayyukan nazari masu zaman kansu waɗanda ke tsammanin bataliyar kiyaye zaman lafiya ta Majalisar Ɗinkin Duniya da ke Nepal ce ta kawo cutar Haiti bisa rashin sani."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10511075547046752697",
+      "group": "1922",
+      "start": 181.68,
+      "end": 206.88,
+      "text": "Tabbas da akwai bayanai daga koyarwar addinin Kirista kan wannan al’adar, amma dai yana iya kasancewa Shekaru ne gabanin bayyanar Kiristanci."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10529716865753778831",
+      "group": "1774",
+      "start": 207.38,
+      "end": 235.7,
+      "text": "A kan iyakar tsibirin da ke kusa da alama ba za a karɓa ba, kodayake ana iya karɓar kuɗin Birtaniya da Amurka; bincika tare da masu shi don sanin menene hanyar biyan kuɗi da za a karɓa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10600401760102194440",
+      "group": "1932",
+      "start": 236.2,
+      "end": 279.94,
+      "text": "Mintuna biyar da fara nunin wata iska ya fara shigowa ciki, kusan minti daya daga baya, iskar ta doshi 70km/h... daga baya ruwan sama yazo, amma da yawa da karfinsa ya sauko yadda zai bugi fatarka kamar allura, saannan wani kankara ya fado daga sama, mutane suna firgita suna kururuwa suna tattake juna."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10623312076286681949",
+      "group": "1853",
+      "start": 280.44,
+      "end": 291.78,
+      "text": "Motar Giancarlo Fisichella ta kwace masa inda hakan ya jawo fitarsa daga tseren jim kaɗan bayan farawa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10638829075402093921",
+      "group": "1814",
+      "start": 292.28,
+      "end": 303.92,
+      "text": "Sinadiran Hydrogen sune proton wadanda suka cire wa Electrons (tunda sunadaran Hydrogen sun kunshi proton daya da electron daya)."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10642781891041506444",
+      "group": "1826",
+      "start": 304.42,
+      "end": 313.3,
+      "text": "Bayan hadarin ya faru, an dauki Gibson zuwa asibiti amma ya mutu jim kadan bayan haka."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10657622312586281522",
+      "group": "1906",
+      "start": 313.8,
+      "end": 324.66,
+      "text": "Wannan ba zai zama ban kwana ba ne. Wannan shine rufewar babin sura da bude wani sabo.”"
+    },
+    {
+      "id": "fleurs_ha_ng_test_10682387719049649408",
+      "group": "1745",
+      "start": 325.16,
+      "end": 336.74,
+      "text": "Tsirrai sun fi kyau idan suna muhallinsu na halitta, saboda haka guji zumuɗin tsige ko da samfur “daya ne kawai”."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10689944351391995888",
+      "group": "1936",
+      "start": 337.24,
+      "end": 364.06,
+      "text": "Perry ya fadi cewa zai “dawo Texas domin tantance sakamakon caucus na daren nan, in tantance ko akwai ko akwai alaman ci gaba man a wannan tsere”, amma daga baya ya ce zai ci gaba da tseren sannan ya yi gasan fid da gwani ran 21 ga Janairu a South Carolina."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10768008037567316007",
+      "group": "1926",
+      "start": 364.56,
+      "end": 388.38,
+      "text": "Cikin wadanda aka amince da su akwai ra’ayin/fahimtar Aristotle kan dukkan batutuwan kimiyya, ciki har da ilimin halayyar dan adam."
+    },
+    {
+      "id": "fleurs_ha_ng_test_1077849305568046366",
+      "group": "1696",
+      "start": 388.88,
+      "end": 409.76,
+      "text": "Magungunan biyu suna aiki tare da juna don samar da lu'ulu'u wanda zai iya toshe aikin koda, masu bincike a jami'ar sun ce."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10849188633248803659",
+      "group": "1753",
+      "start": 410.26,
+      "end": 437.92,
+      "text": "Yayin da yake wannan yawanci ra’ayi ne wanda ba daidai ba, hanya mafi kyau don yin sabo a cikin Paris har yanzu shine kasancewa kan halayyarka mafi kyau, yin aiki kamar wanda yake “bien élevé” (wanda ya sami tarbiyya mai kyau). Zai sanya yin sabo ya kasance mai sauki."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10916169113204290877",
+      "group": "1943",
+      "start": 438.42,
+      "end": 450.78,
+      "text": "Rage tashin hankali, haka kuma yawan fata na gari da karfin rayuwa zai gabatar. Ko wani mutum na da damar samun kwanciyar hankali da gamsuwa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10949709084787282422",
+      "group": "1956",
+      "start": 451.28,
+      "end": 468.02,
+      "text": "Amfani da jirgin ruwa domin kwasan kayayyaki shine mafi inganci wajen kwasan mutane da yawa da kayayyaki ta teku."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10951952101103395893",
+      "group": "1684",
+      "start": 468.52,
+      "end": 479.92,
+      "text": "Apia ce babban birnin Samoa. Garin yana kan tsibirin Upolu kuma yana da yawan al’umma da kadan ya gaza da 40,000."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10960756717638470527",
+      "group": "1863",
+      "start": 480.42,
+      "end": 499.86,
+      "text": "Ginshiƙen tunanun Tibetan shi ne Abin Bauta Yoga. Duk da yake kafafen gani na abubuwan bauta daban-daban hanyoyin makamashi an tsaftace su, akan buɗe chakras inda ake ƙirƙirar tunanin wayewa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10966754724865272648",
+      "group": "1955",
+      "start": 500.36,
+      "end": 511.16,
+      "text": "Cutar MS cuta ce da ke shafar lakkar jikin dan adam, da ya hadar da kwakwalwa da jijiyar lakkar da kuma na kai sakonni."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10967045176369164951",
+      "group": "2000",
+      "start": 511.66,
+      "end": 527.44,
+      "text": "Idan za ka tsallaka Arewacin Baltic a lokacin sanyi, duba wurin taragon, saboda ratsa ƙanƙara na jawo wani mummunan ƙara ga waɗanda abin ya fi shafa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_10988595057300594314",
+      "group": "1820",
+      "start": 527.94,
+      "end": 543.72,
+      "text": "Yanzu mutane suna rubuta saƙonni a kan fuskokin kwamfuta, ba tare da sun taɓa kusantar shafana ba."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11057374738490105331",
+      "group": "1683",
+      "start": 544.22,
+      "end": 570.38,
+      "text": "Har yanzu akwai maza da mata da yawa da ke raye waɗanda suka rayu lokacinsu a nan, kuma da yawa da yawa waɗanda suke da ƙaunatattunsu waɗanda aka kashe ko suka yi aiki zuwa can, yahudawa da waɗanda ba Yahudawa ba."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11063621148654676212",
+      "group": "1820",
+      "start": 570.88,
+      "end": 585.52,
+      "text": "Yanzu mutane suna rubuta saƙonni a kan fuskokin kwamfuta, ba tare da sun taɓa kusantar shafana ba."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11069537965002543376",
+      "group": "1709",
+      "start": 586.02,
+      "end": 604.56,
+      "text": "Rahoton ya yi matuƙar yin suka ga kusan dukkan ɓangarorin manufar Ɓangaren zartaswa na yanzu akan ƙasar Iraƙi inda ya nemi a gaggauta canja alƙibla."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11080780960077631228",
+      "group": "1959",
+      "start": 605.06,
+      "end": 618.62,
+      "text": "Har yanzu, nemi shawara daga hukumomi, yin biyayya ga dukkan alamu, da kuma kula sosai game da gargadin lafiya."
+    },
+    {
+      "id": "fleurs_ha_ng_test_1112515778781265854",
+      "group": "1963",
+      "start": 619.12,
+      "end": 625.9,
+      "text": "Gugan kayayyakin sawa masu lema su a iya taimaka masu bushewa. Yawancin otal suna da dutsen guga da katakon guga kaya don rance, ko da ba wani a cikin ɗakin ba."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11139311548828677740",
+      "group": "1899",
+      "start": 626.4,
+      "end": 648.36,
+      "text": "Muhammadu yana matukar sha'awar al'amuran da suka wuce rayuwar wannan duniya. Ya na yawan ziyarar kogon da a ka fi sani da na “Hira” a tsaunin “Noor” (wato haske) domin kadaicewa yayi tunani."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11175294978052030685",
+      "group": "2008",
+      "start": 648.86,
+      "end": 664.82,
+      "text": "Cikin abubuwan da za’a tattauna a Bali sun hada da yadda za’a ceci ragowar dazukan duniya, musanyar fasaha da yadda za’a taimakawa kasashe masu tasowa su rage gurbata muhalli."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11372204636290404440",
+      "group": "1960",
+      "start": 665.32,
+      "end": 698.38,
+      "text": "An ruwaito cewa yana cikin shekaran sa na 20 ne. A cikin wata sanarwa, Bieber ya ce “duk da ya ke ba na wurin kuma ba ni da hannu kai tsaye cikin wannan mummunan hadarin, tunani da addu'o’ina suna tare da dangin waɗanda abin ya rutsa da su.”"
+    },
+    {
+      "id": "fleurs_ha_ng_test_11379486668254365204",
+      "group": "1879",
+      "start": 698.88,
+      "end": 711.42,
+      "text": "Mutum zai iya yin mamakin abin da keyboard zai zama idan wani sabon abu ya ɓullo."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11469204030685375",
+      "group": "1666",
+      "start": 711.92,
+      "end": 731.12,
+      "text": "Akwai bukatar neman shawarwari daga wasu gwamnatocin ba gwamnatin ka kawai ba, amma dai shawarwarinsu an tsara su ne domin yan kasar su."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11516618174661406145",
+      "group": "1965",
+      "start": 731.62,
+      "end": 756.22,
+      "text": "Kusan duk wuraren bakin teku ne masu yashi da iyo cikin aminci, kuma yawancin suna da inuwa da bishiyoyin pohutukawa ke samarwa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11523847781703855697",
+      "group": "1691",
+      "start": 756.72,
+      "end": 768.78,
+      "text": "A wasu hanyoyin, manyan kanfanonin na da jiragen samansu, amma a wasu hanyoyi daban da ƙananan kanfanoni akwai matsala."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11524049347539434185",
+      "group": "1901",
+      "start": 769.28,
+      "end": 801.26,
+      "text": "Kodayake AI yana da ƙarfin ƙarin ma'anar almara ta kimiyya, AI ya kasance wani reshe na kimiyyar kwamfuta mai matuƙar muhimmanci, da ke mu'amala da halayya, koyo da kuma shigar da fasahar ƙwaƙwalwa a cikin inji."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11526202601547880626",
+      "group": "1938",
+      "start": 801.76,
+      "end": 820.54,
+      "text": "Asibitin ta bi ka’idoji na kula da kamuwa da cuta, tare da raba masu jiyya daga sauran jama’a domin hana yaduwan cutan."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11531021338270715694",
+      "group": "1816",
+      "start": 821.04,
+      "end": 838.26,
+      "text": "Duvall, wanda ke da mata da manyan yaya guda biyu, bai burge Miller ba, wanda ke da alaƙa da labarin."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11573044181214866376",
+      "group": "1700",
+      "start": 838.76,
+      "end": 848.72,
+      "text": "Yana da sirinta a ƙarƙashin maria kuma ya fi kauri a ƙarƙashin tsaunuka."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11574624762486864858",
+      "group": "1919",
+      "start": 849.22,
+      "end": 861.34,
+      "text": "Garin kuma shine tushe da zai hau dutsen Nyiragongo tare da wasu daga cikin mafi saukin farashi duwatsun Gorilla a Afirka."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11613804319357977805",
+      "group": "1943",
+      "start": 861.84,
+      "end": 875.46,
+      "text": "Rage tashin hankali, haka kuma yawan fata na gari da karfin rayuwa zai gabatar. Ko wani mutum na da damar samun kwanciyar hankali da gamsuwa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11628500773412513127",
+      "group": "1916",
+      "start": 875.96,
+      "end": 894.86,
+      "text": "Yawancin kayayyaki da aka dafa da Jamusanci suma suna da alamomin almara, ƙwaya, da sauran ƙwayoyin itace. Mashahurin wainar ba da daɗewa ba haɗe biyu tare da kofi mai ƙarfi."
+    },
+    {
+      "id": "fleurs_ha_ng_test_1170696520183720368",
+      "group": "1716",
+      "start": 895.36,
+      "end": 927.52,
+      "text": "Shagin yanar-gizo na labarun nishaɗi na TMZ ya fahimta cewa mai ɗaukar hoto ɗin ya tsayar da motsarsa a tsallaken titin Sepulveda Boulevard kuma ya yi ƙoƙarin ɗaukar hotuna na tsayawar 'yan sanda kafin ya tsallaka titin kuma ya ci gaba, wanda ya sa ɗan sanda na Sintirin Babbar Hanya ta California wanda yake ba da hannu ya umarce shi ya koma a ƙetare, sau biyu."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11740088430791068923",
+      "group": "1957",
+      "start": 928.02,
+      "end": 935.58,
+      "text": "Ya kira jita-jitar da cewa “hirar siyasa da wauta”."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11758923080825846229",
+      "group": "1721",
+      "start": 936.08,
+      "end": 959.9,
+      "text": "Bayan gina madatsan ruwan a 1963, ambaliyar ruwa da ke zuwa akai-akai kuma yada kasa zuwa kogi ya tsaya."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11778372609366147172",
+      "group": "1982",
+      "start": 960.4,
+      "end": 973.12,
+      "text": "Mata: Yana da kyau kowane mata matafiya su ce sun yi aure, ba tare da la'akari da ainihin matsayin auren ba."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11789471760871307339",
+      "group": "1988",
+      "start": 973.62,
+      "end": 986.46,
+      "text": "A lokacin 1920s, halaye mafi rinjaye na yawancin 'yan ƙasa da ƙasashe shine na zaman lafiya da keɓewa."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11814257496960207856",
+      "group": "1737",
+      "start": 986.96,
+      "end": 1003.82,
+      "text": "Zakuna ne dangin mage da suka fi daɗin ma’amala, suna taruwa wuri ɗaya abin da ake kira iko."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11849555305658980543",
+      "group": "1681",
+      "start": 1004.32,
+      "end": 1038.22,
+      "text": "Ba shi kaɗai bane dai, yin gwaji, kuma gwaji wata hanya ce ta jarrabawa da ake amfani da ita domin kawar da ɗaya ko fiye daga cikin harsashe da za a samu. yin tambayoyi, da fadin ra’ayi su ma suna yin jagora ga binciken kimiyya."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11869169991122260070",
+      "group": "1833",
+      "start": 1038.72,
+      "end": 1064.04,
+      "text": "Aristotle, masanin falsafa ne, yayi tunanin cewa komai ya kunshi cakuda daya ko fiye daga abubuwa hudu. Sun kasance ƙasa, ruwa, iska, da wuta."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11881942274765792202",
+      "group": "1833",
+      "start": 1064.54,
+      "end": 1087.94,
+      "text": "Aristotle, masanin falsafa ne, yayi tunanin cewa komai ya kunshi cakuda daya ko fiye daga abubuwa hudu. Sun kasance ƙasa, ruwa, iska, da wuta."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11883994977874033848",
+      "group": "1829",
+      "start": 1088.44,
+      "end": 1112.14,
+      "text": "Matafiya zuwa ƙasashe masu tsananin haraji za su iya adana wani adadin kuɗin mai yawa a wasu lokuta n, musamman akan abubuwa kamar barasa da taba."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11908337297982711433",
+      "group": "1968",
+      "start": 1112.64,
+      "end": 1141.38,
+      "text": "Wasu jiragen ruwa su kan sanya Berlin, Jamus a cikin littafin bayanin. Kamar yadda ka ke gani daga taswirar da ke sama babu inda Berlin ta yi kusa da teku kuma ba a haɗa ziyarar birnin ba a farashin jirgi."
+    },
+    {
+      "id": "fleurs_ha_ng_test_1192731836953490144",
+      "group": "1814",
+      "start": 1141.88,
+      "end": 1152.38,
+      "text": "Sinadiran Hydrogen sune proton wadanda suka cire wa Electrons (tunda sunadaran Hydrogen sun kunshi proton daya da electron daya)."
+    },
+    {
+      "id": "fleurs_ha_ng_test_1192840162703860723",
+      "group": "1899",
+      "start": 1152.88,
+      "end": 1182.4,
+      "text": "Muhammadu yana matukar sha'awar al'amuran da suka wuce rayuwar wannan duniya. Ya na yawan ziyarar kogon da a ka fi sani da na “Hira” a tsaunin “Noor” (wato haske) domin kadaicewa yayi tunani."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11968709428616719746",
+      "group": "1994",
+      "start": 1182.9,
+      "end": 1197.24,
+      "text": "A bayyane take, idan ka san yaren Romance, zai yi sauki maka ka koyi Portuguese."
+    },
+    {
+      "id": "fleurs_ha_ng_test_11991957186166435694",
+      "group": "1974",
+      "start": 1197.74,
+      "end": 1212.26,
+      "text": "A bisa wannan madogara, ana buƙatar maza su sanya wanduna da ke rufe gwiwoyi."
+    },
+    {
+      "id": "fleurs_ha_ng_test_12012531221349839854",
+      "group": "1875",
+      "start": 1212.76,
+      "end": 1225.12,
+      "text": "Cikakken kashi 20 cikin dari na ruwan da ke zubowa daga koramun duniyar zuwa cikin teku yana zuwa ne daga Amazon."
+    },
+    {
+      "id": "fleurs_ha_ng_test_12012674013346403135",
+      "group": "1997",
+      "start": 1225.62,
+      "end": 1272.54,
+      "text": "Sai dai, kashin XDR-TB da ke jikin duk rukunin mutane da ke da tarin fuka har yanzu da alamar yana ƙasa; 6,000 daga cikin jimillar mutane 330,000 da suka kamu a kowane lokaci a Afirka ta Kudu."
+    }
+  ]
+}

@@ -28,6 +28,22 @@ proposed again.
 
 ## 2026-10-09
 
+- **Fine-tune on FLEURS train, measured once on FLEURS test, tonight; the
+  fine-tune on own corrected audio is cut from this submission.** Wording: it
+  shows the kit works end to end, not what human corrections add.
+  *Why:* no corrections exist yet; pm's recommendation, Baffa agreed.
+  *Applies to:* gyara-ml (notebook, run), gyara-stats (review), all docs.
+
+- **Own held-out audio has a hard stop: Sat 10 Oct 12:00.** If by then there is
+  signed consent and >= 15 min from >= 3 new speakers, measure and report it
+  with its wide interval; otherwise cut it and say "not measured".
+  *Why:* pm's recommendation, Baffa agreed. *Applies to:* Baffa, gyara-ml.
+
+- **No hosted Space: testers use a local install plus `gyara ui --share`.**
+  This replaces the public-Space entry below. *Why:* HF now requires PRO to
+  host Gradio Spaces; Baffa chose the plan's free fallback over paying.
+  *Applies to:* gyara-app (README, SUBMISSION, tester kit), the video.
+
 - **FLEURS headline stays standard WER (30.19%), with lenient (27.33%) shown
   beside it and the reason.** *Why:* gyara-stats found the FLEURS references
   often omit hooked letters the model writes; Baffa kept the rule fixed

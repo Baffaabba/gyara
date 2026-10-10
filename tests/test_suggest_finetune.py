@@ -178,7 +178,11 @@ def test_load_config_merges_defaults():
     assert cfg["data"]["exports"] == ["x"]
     assert cfg["base_model"] == "NCAIR1/Hausa-ASR" and cfg["language"] == "hausa"
     with pytest.raises(ValueError):
-        ft.load_config({"data": {"fleurs_fraction": 1.0}})
+        ft.load_config({"data": {"fleurs_fraction": 1.5}})
+    # 1.0 = FLEURS train only; mixing it with exports makes no sense.
+    assert ft.load_config({"data": {"fleurs_fraction": 1.0}})["data"]["fleurs_fraction"] == 1.0
+    with pytest.raises(ValueError, match="FLEURS train only"):
+        ft.load_config({"data": {"fleurs_fraction": 1.0, "exports": ["x"]}})
 
 
 def test_load_config_from_yaml(tmp_path):
@@ -223,6 +227,69 @@ def test_prepare_data_clean_split_and_drafts(tmp_path):
     assert dev_spk and train_spk and not (train_spk & dev_spk)
 
 
+def test_read_export_metadata_only_keeps_rows_with_draft_text(tmp_path):
+    # export.py writes the ASR first draft as `draft: "<text>"` in metadata.jsonl.
+    # Reading an export that has only metadata.jsonl must not take that text
+    # for an "unverified" flag (it used to drop every row).
+    d = tmp_path / "exp"
+    (d / "audio").mkdir(parents=True)
+    _wav(d / "audio" / "a.wav", 1)
+    _wav(d / "audio" / "b.wav", 2)
+    lines = [{"file_name": "audio/a.wav", "transcription": "sannu", "draft": "sanu"},
+             {"file_name": "audio/b.wav", "transcription": "ina kwana", "draft": True}]
+    (d / "metadata.jsonl").write_text("\n".join(json.dumps(x) for x in lines) + "\n",
+                                      encoding="utf-8")
+    with pytest.warns(UserWarning, match="dropped 1 draft"):
+        rows = ft.read_export(d)
+    assert [r.text for r in rows] == ["sannu"]
+
+
+def _fleurs_like(root, name, n, seed0):
+    """A FLEURS-style manifest: no speaker ids, sentence id as group."""
+    d = root / name
+    d.mkdir(exist_ok=True)
+    rows = []
+    for i in range(n):
+        _wav(d / f"{i}.wav", seed0 + i)
+        rows.append({"id": f"{name}{i}", "audio": f"{i}.wav", "text": f"jumla {name} {i}",
+                     "group": str(seed0 + i), "duration": 1.0, "source": "fleurs"})
+    mf.write(d / "m.jsonl", rows)
+    return d / "m.jsonl"
+
+
+def test_prepare_data_fleurs_only_with_dev_manifest(tmp_path):
+    train = _fleurs_like(tmp_path, "train", 6, 100)
+    dev = _fleurs_like(tmp_path, "dev", 2, 200)
+    test = _fleurs_like(tmp_path, "test", 3, 300)
+    cfg = ft.load_config({"data": {"fleurs_fraction": 1.0, "fleurs_manifest": str(train),
+                                   "dev_manifest": str(dev), "heldout": [str(test)]}})
+    d = ft.prepare_data(cfg)
+    assert len(d["train"]) == 6 and len(d["dev"]) == 2  # all of train, dev as given
+    assert d["dev_split"].startswith("given dev manifest")
+    # No speaker ids anywhere: the note must not claim speakers were checked.
+    assert "8 of 8 training/dev and 3 of 3 held-out" in d["leakage_note"]
+    assert "cannot check" in d["leakage_note"]
+
+
+def test_prepare_data_dev_manifest_is_leakage_checked(tmp_path):
+    train = _fleurs_like(tmp_path, "train", 4, 100)
+    test = _fleurs_like(tmp_path, "test", 3, 300)
+    cfg = ft.load_config({"data": {"fleurs_fraction": 1.0, "fleurs_manifest": str(train),
+                                   "dev_manifest": str(test), "heldout": [str(test)]}})
+    with pytest.raises(ft.LeakageError, match="identical"):
+        ft.prepare_data(cfg)
+
+
+def test_prepare_data_fleurs_only_without_dev_manifest_says_by_utterance(tmp_path):
+    train = _fleurs_like(tmp_path, "train", 10, 100)
+    test = _fleurs_like(tmp_path, "test", 2, 300)
+    cfg = ft.load_config({"data": {"fleurs_fraction": 1.0, "fleurs_manifest": str(train),
+                                   "heldout": [str(test)], "dev_fraction": 0.2}})
+    with pytest.warns(UserWarning, match="by utterance"):
+        d = ft.prepare_data(cfg)
+    assert len(d["dev"]) == 2 and "by utterance" in d["dev_split"]
+
+
 def test_speaker_dev_split_single_speaker_falls_back_with_warning(tmp_path):
     rows = [mf.Row(id=str(i), audio="x", text="a", speaker="solo") for i in range(10)]
     with pytest.warns(UserWarning, match="by utterance"):
@@ -258,6 +325,11 @@ def test_verdict_and_before_after(tmp_path):
     text = ft.write_before_after(tmp_path / "ba.md", summary).read_text(encoding="utf-8")
     assert "Configs tried for this model so far: **2**" in text and sentence in text
     assert "Awarri" in text
+    summary.update(dev_split="random split by utterance", leakage_note="Leakage check passed for audio.",
+                   speakers=0, own_hours=0.0, fleurs_utterances=10)
+    text = ft.write_before_after(tmp_path / "ba.md", summary).read_text(encoding="utf-8")
+    assert "Dev set: random split by utterance." in text and "speakers not labelled" in text
+    assert "Leakage: Leakage check passed for audio." in text and "FLEURS ha_ng train" in text
 
 
 @pytest.mark.parametrize("language", ["hausa", None])

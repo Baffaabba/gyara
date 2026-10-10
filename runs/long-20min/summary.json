@@ -1,0 +1,52 @@
+{
+  "input": "FLEURS ha_ng test clips concatenated (read speech, not a natural recording)",
+  "n_clips": 67,
+  "gap_between_clips_s": 0.5,
+  "audio_seconds": 1273.0,
+  "model": "NCAIR1/Hausa-ASR",
+  "device": "cpu (fp32), Windows laptop",
+  "wall_seconds": 988,
+  "rtf": 0.776,
+  "vad_backend": "silero",
+  "vad_regions": 438,
+  "segments": 45,
+  "segment_seconds": {
+    "min": 15.6,
+    "median": 26.67,
+    "max": 29.93
+  },
+  "segments_over_30s": 0,
+  "segments_flagged": 0,
+  "flags": [],
+  "empty_segments": 0,
+  "whole_text_loop_check": {
+    "flagged": false,
+    "reason": "",
+    "compression_ratio": 2.386,
+    "longest_consecutive_repeat": {
+      "times": 2,
+      "ngram_words": 1
+    },
+    "words_per_second": 1.311
+  },
+  "srt_cues": 198,
+  "content_check_standard_rules_1.0.0": {
+    "reference_words": 1748,
+    "long_file_wer": 0.3209,
+    "long_file_cer": 0.1154,
+    "long_file_hyp_words": 1693,
+    "same_clips_one_by_one_wer_t4": 0.3089,
+    "same_clips_one_by_one_cer_t4": 0.1003,
+    "same_clips_one_by_one_hyp_words": 1707,
+    "long_file_edits": {
+      "sub": 386,
+      "del": 115,
+      "ins": 60
+    },
+    "one_by_one_edits": {
+      "sub": 405,
+      "del": 88,
+      "ins": 47
+    }
+  }
+}

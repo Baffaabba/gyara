@@ -1,0 +1,143 @@
+$ gyara finetune --config runs/smoke-finetune-export/finetune.yaml
+[exit 0, 195 s]
+
+--- stdout ---
+{'loss': 1.1929, 'grad_norm': 21.481056213378906, 'learning_rate': 0.0, 'epoch': 0.5}
+{'eval_loss': 0.8910489678382874, 'eval_wer': 0.075, 'eval_cer': 0.027649769585253458, 'eval_runtime': 32.6152, 'eval_samples_per_second': 0.061, 'eval_steps_per_second': 0.031, 'epoch': 0.5}
+{'loss': 1.7684, 'grad_norm': 33.68164825439453, 'learning_rate': 1e-05, 'epoch': 1.0}
+{'eval_loss': 0.8628400564193726, 'eval_wer': 0.075, 'eval_cer': 0.027649769585253458, 'eval_runtime': 38.8021, 'eval_samples_per_second': 0.052, 'eval_steps_per_second': 0.026, 'epoch': 1.0}
+{'train_runtime': 130.6651, 'train_samples_per_second': 0.031, 'train_steps_per_second': 0.015, 'train_loss': 1.4806544780731201, 'epoch': 1.0}
+{
+    'attempt': 1,
+    'seed': 42,
+    'base_model': 'NCAIR1/Hausa-ASR',
+    'language': 'hausa',
+    'output_dir': 'runs\\smoke-finetune-export\\out',
+    'model_dir': 'runs\\smoke-finetune-export\\out\\model',
+    'train_utterances': 4,
+    'dev_utterances': 2,
+    'train_hours': 0.009533333333333333,
+    'own_hours': 0.009533333333333333,
+    'fleurs_utterances': 0,
+    'speakers': 0,
+    'dev_speakers': 0,
+    'encoder_frozen': True,
+    'global_step': 2,
+    'train_loss': 1.4806544780731201,
+    'dev_wer': 0.075,
+    'dev_cer': 0.027649769585253458,
+    'best_checkpoint': 
+'runs\\smoke-finetune-export\\out\\checkpoints\\checkpoint-1',
+    'heldout': ['data\\fleurs\\test.jsonl'],
+    'rules_version': '1.0.0',
+    'dev_split': 'random split of the training pool by utterance (2 
+utterances): no speaker ids, so the same voice can be in train and dev and dev 
+WER is optimistic',
+    'leakage_note': 'Leakage check passed for audio: no file is shared (sha256 
+of every file). Speaker overlap could only be checked where both sides carry 
+speaker ids: 6 of 6 training/dev and 621 of 621 held-out utterances have none. 
+FLEURS publishes no speaker ids; its dataset card states that train speakers 
+differ from dev/test speakers, which we rely on but cannot check.',
+    'notes': ['language/task tokens: <|hausa|> <|transcribe|>'],
+    'config': {
+        'attempt': 1,
+        'seed': 42,
+        'base_model': 'NCAIR1/Hausa-ASR',
+        'processor_fallback': 'openai/whisper-small',
+        'language': 'hausa',
+        'task': 'transcribe',
+        'output_dir': 'runs\\smoke-finetune-export\\out',
+        'model_name': 'hausa-asr-gyara-export-smoke',
+        'data': {
+            'exports': [
+                'E:\\Repos\\gyara\\runs\\smoke-finetune-export\\workspace\\expo
+rts\\gyara-dataset-20261009-183309'
+            ],
+            'fleurs_fraction': 0.0,
+            'fleurs_manifest': None,
+            'heldout': ['data/fleurs/test.jsonl'],
+            'require_heldout': True,
+            'dev_fraction': 0.34,
+            'dev_manifest': None,
+            'max_duration_s': 30.0
+        },
+        'training': {
+            'learning_rate': 1e-05,
+            'warmup_ratio': 0.1,
+            'max_steps': 2,
+            'per_device_train_batch_size': 2,
+            'per_device_eval_batch_size': 2,
+            'gradient_accumulation_steps': 1,
+            'gradient_checkpointing': True,
+            'freeze_encoder': 'auto',
+            'freeze_encoder_below_hours': 5.0,
+            'spec_augment': True,
+            'mask_time_prob': 0.05,
+            'eval_steps': 1,
+            'save_total_limit': 2,
+            'early_stopping_patience': 3,
+            'generation_max_length': 64,
+            'logging_steps': 1,
+            'dataloader_num_workers': 0
+        },
+        'eval': {'after': False, 'batch_size': 8, 'limit': None}
+    },
+    'comparisons': [],
+    'before_after': None
+}
+
+--- stderr ---
+E:\Repos\gyara\gyara\finetune\train.py:456: UserWarning: Fewer than two speakers in the training pool: dev split is by utterance, not by speaker, so dev WER will be optimistic for new voices.
+  train_own, dev = speaker_dev_split(own, float(d["dev_fraction"]), seed)
+
+  0%|          | 0/2 [00:00<?, ?it/s]E:\Repos\gyara\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+You're using a WhisperTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+
+ 50%|█████     | 1/2 [00:22<00:22, 22.89s/it]
+                                             
+
+ 50%|█████     | 1/2 [00:22<00:22, 22.89s/it]The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+
+
+  0%|          | 0/1 [00:00<?, ?it/s][A
+                                             
+
+
+                                     
+[A
+ 50%|█████     | 1/2 [00:55<00:22, 22.89s/it]
+
+100%|██████████| 1/1 [00:00<00:00, 125.05it/s][A
+
+                                              [AE:\Repos\gyara\.venv\Lib\site-packages\transformers\modeling_utils.py:3918: UserWarning: Moving the following attributes in the config to the generation config: {'max_length': 448, 'suppress_tokens': [1, 2, 7, 8, 9, 10, 14, 25, 26, 27, 28, 29, 31, 58, 59, 60, 61, 62, 63, 90, 91, 92, 93, 359, 503, 522, 542, 873, 893, 902, 918, 922, 931, 1350, 1853, 1982, 2460, 2627, 3246, 3253, 3268, 3536, 3846, 3961, 4183, 4667, 6585, 6647, 7273, 9061, 9383, 10428, 10929, 11938, 12033, 12331, 12562, 13793, 14157, 14635, 15265, 15618, 16553, 16604, 18362, 18956, 20075, 21675, 22520, 26130, 26161, 26435, 28279, 29464, 31650, 32302, 32470, 36865, 42863, 47425, 49870, 50254, 50258, 50360, 50361, 50362], 'begin_suppress_tokens': [220, 50257]}. You are seeing this warning because you've set generation parameters in the model config, as opposed to in the generation config.
+  warnings.warn(
+
+100%|██████████| 2/2 [01:19<00:00, 42.95s/it]
+                                             
+
+100%|██████████| 2/2 [01:19<00:00, 42.95s/it]E:\Repos\gyara\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+
+  0%|          | 0/1 [00:00<?, ?it/s][A
+                                             
+
+
+                                     
+[A
+100%|██████████| 2/2 [01:58<00:00, 42.95s/it]
+
+100%|██████████| 1/1 [00:00<00:00, 335.60it/s][A
+
+                                              [AThere were missing keys in the checkpoint model loaded: ['proj_out.weight'].
+
+                                             
+
+100%|██████████| 2/2 [02:10<00:00, 42.95s/it]
+100%|██████████| 2/2 [02:10<00:00, 65.33s/it]
+E:\Repos\gyara\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+  0%|          | 0/1 [00:00<?, ?it/s]
+100%|██████████| 1/1 [00:00<00:00, 330.16it/s]

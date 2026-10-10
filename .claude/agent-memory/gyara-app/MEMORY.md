@@ -1,1 +1,2 @@
-- [No HF token on dev laptop](project_no_hf_token.md) — 2026-10-09: gated models 401 locally; Baffa deploys the Space himself
+- [No HF token on dev laptop](project_no_hf_token.md) — 2026-10-09: gated models 401 locally; real-model runs on Colab
+- [No hosted demo](project_no_hosted_demo.md) — 2026-10-09: no Space (needs PRO); README install + `gyara ui --share` for testers
